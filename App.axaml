@@ -1,0 +1,31 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AgentManagement.Avalonia.App"
+             xmlns:local="using:AgentManagement.Avalonia"
+             xmlns:converters="using:AgentManagement.Avalonia.Converters"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Resources>
+        
+        <ResourceDictionary>
+            <converters:BoolConverter x:Key="BoolConverter"/>
+            <converters:DecimalToPercentageConverter x:Key="DecimalToPercentageConverter"/>
+            <converters:PercentageWidthConverter x:Key="PercentageWidthConverter"/>
+            <converters:TotalAdjustedNetProfitConverter x:Key="TotalAdjustedNetProfitConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="Resources/FontSizes.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+		<!-- 必须添加这行 
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>-->
+    </Application.Styles>
+</Application>
