@@ -1,0 +1,279 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels.Controls"
+        xmlns:vmc="using:AgentManagement.Avalonia.ViewModels.Controls"
+        x:Class="AgentManagement.Avalonia.Controls.ProductSelectorDialog"
+        x:DataType="vm:ProductSelectorDialogViewModel"
+        Title="选择产品型号"
+        Width="800" Height="550"
+        WindowStartupLocation="CenterScreen">
+    
+    <Design.DataContext>
+        <vm:ProductSelectorDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <!-- 第一步：三级检索选择型号 -->
+        <StackPanel IsVisible="{Binding !ShowDetailPanel}">
+            <!-- 头部 -->
+            <Border Background="#3B82F6" Padding="24,20">
+                <StackPanel>
+                    <TextBlock Text="选择产品型号" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="选择产品系列和具体型号" FontSize="12" Foreground="#BFDBFE" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 三级选择器 -->
+            <Border Padding="24" Background="White">
+                <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,*">
+                    <!-- 列标题 -->
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="系列名称" FontWeight="Medium" FontSize="12" Foreground="#6B7280" Margin="0,0,0,12"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="产品系列" FontWeight="Medium" FontSize="12" Foreground="#6B7280" Margin="0,0,0,12"/>
+                    <TextBlock Grid.Column="2" Grid.Row="0" Text="产品型号" FontWeight="Medium" FontSize="12" Foreground="#6B7280" Margin="0,0,0,12"/>
+
+                    <!-- 一级：系列名称 -->
+                    <Border Grid.Column="0" Grid.Row="1" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                        <ScrollViewer Height="350" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding Level1List}">
+                                <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                        <Button Content="{Binding}"
+                                               Command="{Binding $parent[Window].DataContext.SelectLevel1Command}"
+                                               CommandParameter="{Binding}"
+                                               Background="Transparent"
+                                               BorderThickness="0"
+                                               Padding="16,12"
+                                               HorizontalContentAlignment="Left"
+                                               FontSize="13"
+                                               Foreground="#374151"
+                                               Cursor="Hand"
+                                               Margin="0">
+                                            <Button.Styles>
+                                                <Style Selector="Button:pointerover">
+                                                    <Setter Property="Background" Value="#F3F4F6"/>
+                                                </Style>
+                                                <Style Selector="Button:pressed">
+                                                    <Setter Property="Background" Value="#E5E7EB"/>
+                                                </Style>
+                                            </Button.Styles>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- 二级：产品系列 -->
+                    <Border Grid.Column="1" Grid.Row="1" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                        <Grid>
+                            <!-- 空数据提示 -->
+                            <TextBlock Text="请先选择系列名称" 
+                                      FontSize="13" 
+                                      Foreground="#9CA3AF" 
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      IsVisible="{Binding Level2List.Count, Converter={StaticResource BoolConverter}, ConverterParameter=Invert}"/>
+                            
+                            <!-- 列表 -->
+                            <ScrollViewer Height="350" VerticalScrollBarVisibility="Auto" IsVisible="{Binding Level2List.Count, Converter={StaticResource BoolConverter}}">
+                                <ItemsControl ItemsSource="{Binding Level2List}">
+                                    <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                            <Button Content="{Binding}"
+                                                   Command="{Binding $parent[Window].DataContext.SelectLevel2Command}"
+                                                   CommandParameter="{Binding}"
+                                                   Background="Transparent"
+                                                   BorderThickness="0"
+                                                   Padding="16,12"
+                                                   HorizontalContentAlignment="Left"
+                                                   FontSize="13"
+                                                   Foreground="#374151"
+                                                   Cursor="Hand"
+                                                   Margin="0">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#F3F4F6"/>
+                                                    </Style>
+                                                    <Style Selector="Button:pressed">
+                                                        <Setter Property="Background" Value="#E5E7EB"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <!-- 三级：产品型号 -->
+                    <Border Grid.Column="2" Grid.Row="1" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8">
+                        <Grid>
+                            <!-- 空数据提示 -->
+                            <TextBlock Text="请先选择产品系列" 
+                                      FontSize="13" 
+                                      Foreground="#9CA3AF" 
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      IsVisible="{Binding Level3List.Count, Converter={StaticResource BoolConverter}, ConverterParameter=Invert}"/>
+                            
+                            <!-- 列表 -->
+                            <ScrollViewer Height="350" VerticalScrollBarVisibility="Auto" IsVisible="{Binding Level3List.Count, Converter={StaticResource BoolConverter}}">
+                                <ItemsControl ItemsSource="{Binding Level3List}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vmc:ProductModelItem">
+                                            <Button Content="{Binding Model}"
+                                                   Command="{Binding $parent[Window].DataContext.SelectLevel3Command}"
+                                                   CommandParameter="{Binding}"
+                                                   Background="Transparent"
+                                                   BorderThickness="0"
+                                                   Padding="16,12"
+                                                   HorizontalContentAlignment="Left"
+                                                   FontSize="13"
+                                                   Foreground="#374151"
+                                                   Cursor="Hand"
+                                                   Margin="0">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#F3F4F6"/>
+                                                    </Style>
+                                                    <Style Selector="Button:pressed">
+                                                        <Setter Property="Background" Value="#E5E7EB"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 底部按钮 -->
+            <Border Padding="24,16" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
+                    <Button Content="取消"
+                           Command="{Binding CancelCommand}"
+                           Background="White"
+                           Foreground="#374151"
+                           BorderBrush="#D1D5DB"
+                           BorderThickness="1"
+                           Padding="24,10"
+                           CornerRadius="8"
+                           FontSize="13"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- 第二步：设置详细参数 -->
+        <StackPanel IsVisible="{Binding ShowDetailPanel}">
+            <!-- 头部 -->
+            <Border Background="#10B981" Padding="24,20">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="设置产品参数" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="{Binding SelectedLevel3}" FontSize="12" Foreground="#D1FAE5" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Command="{Binding CloseDetailPanelCommand}"
+                           Background="Transparent"
+                           BorderThickness="0"
+                           Padding="8"
+                           Cursor="Hand"
+                           VerticalAlignment="Center">
+                        <TextBlock Text="✕" FontSize="18" Foreground="White"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- 参数表单 -->
+            <Border Padding="24" Background="White">
+                <StackPanel Spacing="20">
+                    <!-- 占比提示 -->
+                    <Border Background="#F3F4F6" Padding="16" CornerRadius="8">
+                        <StackPanel>
+                            <TextBlock FontSize="13" Foreground="#374151">
+                                <Run Text="产品占比:" FontWeight="Medium"/>
+                                <Run Text=" 0%（默认）"/>
+                            </TextBlock>
+                            <TextBlock Text="添加后可在产品配置中手动调整占比" FontSize="11" Foreground="#6B7280" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 组价 -->
+                    <StackPanel>
+                        <TextBlock Text="产品组价 (元)" FontSize="13" FontWeight="Medium" Foreground="#374151" Margin="0,0,0,8"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding GroupPrice}" 
+                                    InputMethod.IsInputMethodEnabled="False"
+                                    Padding="16,12"
+                                    FontSize="13"
+                                    BorderBrush="#D1D5DB"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    TextAlignment="Right"/>
+                            <TextBlock Grid.Column="1" Text="元" FontSize="13" Foreground="#6B7280" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- 进价 -->
+                    <StackPanel>
+                        <TextBlock Text="产品进价 (元)" FontSize="13" FontWeight="Medium" Foreground="#374151" Margin="0,0,0,8"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding PurchasePrice}" 
+                                    InputMethod.IsInputMethodEnabled="False"
+                                    Padding="16,12"
+                                    FontSize="13"
+                                    BorderBrush="#D1D5DB"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    TextAlignment="Right"/>
+                            <TextBlock Grid.Column="1" Text="元" FontSize="13" Foreground="#6B7280" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- 提成 -->
+                    <StackPanel>
+                        <TextBlock Text="提成 (元)" FontSize="13" FontWeight="Medium" Foreground="#374151" Margin="0,0,0,8"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding Commission}" 
+                                    InputMethod.IsInputMethodEnabled="False"
+                                    Padding="16,12"
+                                    FontSize="13"
+                                    BorderBrush="#D1D5DB"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    TextAlignment="Right"/>
+                            <TextBlock Grid.Column="1" Text="元" FontSize="13" Foreground="#6B7280" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 底部按钮 -->
+            <Border Padding="24,16" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
+                    <Button Content="取消"
+                           Command="{Binding CancelCommand}"
+                           Background="White"
+                           Foreground="#374151"
+                           BorderBrush="#D1D5DB"
+                           BorderThickness="1"
+                           Padding="24,10"
+                           CornerRadius="8"
+                           FontSize="13"/>
+                    <Button Content="✓ 确认添加"
+                           Command="{Binding ConfirmAddProductCommand}"
+                           Background="#10B981"
+                           Foreground="White"
+                           BorderThickness="0"
+                           Padding="24,10"
+                           CornerRadius="8"
+                           FontSize="13"
+                           FontWeight="Medium"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>

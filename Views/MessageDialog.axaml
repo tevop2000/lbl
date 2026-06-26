@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.Views"
+        x:Class="AgentManagement.Avalonia.Views.MessageDialog"
+        x:DataType="vm:MessageDialogViewModel"
+        Title="{Binding Title}"
+        Width="500"
+        Height="450"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                        <TextBlock Text="提示信息" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
+            <!-- 内容区域 -->
+            <ScrollViewer Grid.Row="1" Padding="24,16,24,0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20">
+                    <!-- 图标 -->
+                    <TextBlock Text="{Binding Icon}"
+                              FontSize="64"
+                              HorizontalAlignment="Center"
+                              Margin="0,10"/>
+                    
+                    <!-- 消息内容 -->
+                    <TextBlock Text="{Binding Message}"
+                              FontSize="15"
+                              Foreground="#374151"
+                              TextWrapping="Wrap"
+                              TextAlignment="Center"
+                              HorizontalAlignment="Center"
+                              MaxWidth="400"
+                              LineHeight="24"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 底部按钮区域 -->			
+			<Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+				<Grid>
+					<Button x:Name="ConfirmButton"
+							Content="确 定"
+							Background="#3B82F6"
+							Foreground="White"
+							FontSize="16"
+							FontWeight="Bold"
+							Padding="40,12"
+							CornerRadius="12"
+							HorizontalAlignment="Right"
+							Width="120"
+							Click="ConfirmButton_Click"/>
+				</Grid>
+			</Border>
+        </Grid>
+    </Border>
+</Window>

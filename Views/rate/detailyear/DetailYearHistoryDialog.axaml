@@ -1,0 +1,266 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="AgentManagement.Avalonia.Views.rate.detailyear.DetailYearHistoryDialog"
+        Title="年度方案详情"
+        Width="1000"
+        Height="700"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Window.Styles>
+        <Style Selector="Button.closeButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        <Style Selector="Button.closeButton:pointerover">
+            <Setter Property="Foreground" Value="#1A2533"/>
+        </Style>
+    </Window.Styles>
+    
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                        <TextBlock Text="年度方案详情查看" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+            
+            <!-- 内容区域 -->
+            <Border Grid.Row="1" Padding="24,20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="24">
+                        <!-- 加载状态 -->
+                        <StackPanel IsVisible="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="200">
+                            <TextBlock Text="{Binding LoadingMessage}" FontSize="14" Foreground="#64748B"/>
+                        </StackPanel>
+                        
+                        <!-- 月度数据明细 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="📋" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="月度数据明细" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                <StackPanel>
+                                    <!-- 表头 -->
+                                    <Grid ColumnDefinitions="2*,1*,1*,1*,1*,1*,1*,1*,1*,1*" Background="#F8FAFC">
+                                        <TextBlock Grid.Column="0" Text="代理商" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="1" Text="年份" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="2" Text="目标销量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="3" Text="达成率" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="4" Text="提升后销量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="5" Text="销量增长毛利" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="6" Text="结构优化毛利" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="7" Text="溢价毛利" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="8" Text="总超出毛利" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                        <TextBlock Grid.Column="9" Text="调整后净利润" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                                    </Grid>
+                                    
+                                    <!-- 数据行 -->
+                                    <ItemsControl ItemsSource="{Binding MonthlyDetailList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="0,0,0,1" BorderBrush="#E2E8F0">
+                                                    <Grid ColumnDefinitions="2*,1*,1*,1*,1*,1*,1*,1*,1*,1*">
+                                                        <TextBlock Grid.Column="0" Text="{Binding AgentName}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding Month}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding TargetSales, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="3" Text="{Binding BreakEvenRatePercent, StringFormat=\{0:F2\}%}" FontSize="{StaticResource DefaultFontSize}" Foreground="#D97706" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="4" Text="{Binding OptimizedSales, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#7C3AED" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="5" Text="{Binding SalesGrowthProfit, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#059669" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="6" Text="{Binding StructureOptimizeProfit, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#059669" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="7" Text="{Binding PremiumProfit, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#059669" Padding="12,8"/>
+                                                        <Border Grid.Column="8" Background="#F0FDF4" Padding="12,8">
+                                                            <TextBlock Text="{Binding TotalExtraProfit, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#059669"/>
+                                                        </Border>
+                                                        <TextBlock Grid.Column="9" Text="{Binding AdjustedNetProfit, StringFormat=\{0:N0\}}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" Padding="12,8"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 参数详情 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="⚙️" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="参数详情" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <!-- 基础设置 -->
+                            <Border Background="#EFF6FF" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,16">
+                                        <TextBlock Text="💰" FontSize="14"/>
+                                        <TextBlock Text="基础设置" FontSize="14" FontWeight="Bold" Foreground="#1A2533"/>
+                                    </StackPanel>
+                                    
+                                    <Grid ColumnDefinitions="*,*,*,*">
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="年目标销量" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding TargetSales, StringFormat=\{0:N0\}}" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="销售量增长率" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding SalesGrowthRate, StringFormat=\{0:F2\}%}" FontSize="18" FontWeight="Bold" Foreground="#059669"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="销售量达成率" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,4"/>
+                                            <TextBlock Text="{Binding SalesAchievementRate, StringFormat=\{0:F2\}%}" FontSize="18" FontWeight="Bold" Foreground="#7C3AED"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 固定成本和收益项目 -->
+                            <Border Background="#F8FAFC" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <!-- 固定成本 -->
+                                    <TextBlock Text="固定成本" FontSize="14" FontWeight="Bold" Foreground="#1A2533" Margin="0,0,0,12"/>
+                                    
+                                    <ItemsControl ItemsSource="{Binding FixedCostItems}" Margin="0,0,0,16">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,100" Margin="0,0,0,8">
+                                                    <TextBlock Grid.Column="0" Text="{Binding ExpenseType}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Amount, StringFormat=\{0:N0\}元}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" TextAlignment="Right"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <!-- 分割线 -->
+                                    <Border Margin="0,0,0,16" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1"/>
+                                    
+                                    <!-- 收益项目 -->
+                                    <TextBlock Text="收益项目" FontSize="14" FontWeight="Bold" Foreground="#1A2533" Margin="0,0,0,12"/>
+                                    
+                                    <ItemsControl ItemsSource="{Binding IncomeItems}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="*,100" Margin="0,0,0,8">
+                                                    <TextBlock Grid.Column="0" Text="{Binding ExpenseType}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Amount, StringFormat=\{0:N0\}元}" FontSize="{StaticResource DefaultFontSize}" Foreground="#059669" TextAlignment="Right"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 产品设置 -->
+                            <Border Background="#F8FAFC" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,12">
+                                        <TextBlock Text="📦" FontSize="14"/>
+                                        <TextBlock Text="产品设置" FontSize="14" FontWeight="Bold" Foreground="#1A2533"/>
+                                    </StackPanel>
+                                    
+                                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
+                                        <StackPanel>
+                                            <!-- 表头 -->
+                                            <Grid ColumnDefinitions="2*,1*,1*,1*,1*" Background="#F1F5F9">
+                                                <TextBlock Grid.Column="0" Text="产品型号" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="1" Text="占比" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="2" Text="售价(元)" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="3" Text="进价(元)" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="4" Text="提成(元)" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                            </Grid>
+                                            
+                                            <!-- 数据行 -->
+                                            <ItemsControl ItemsSource="{Binding ProductStructures}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="2*,1*,1*,1*,1*" Margin="0,2">
+                                                            <TextBlock Grid.Column="0" Text="{Binding ItemModel}" FontSize="11" Foreground="#1A2533" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding StructureRatio, StringFormat=\{0:F2\}}" FontSize="11" Foreground="#64748B" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="2" Text="{Binding RemiumPrice, StringFormat=\{0:F2\}}" FontSize="11" Foreground="#D97706" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="3" Text="{Binding RemiumCost, StringFormat=\{0:N0\}}" FontSize="11" Foreground="#059669" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="4" Text="{Binding Commission, StringFormat=\{0:N0\}}" FontSize="11" Foreground="#059669" Padding="8,6"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- 结构优化设置 -->
+                            <Border Background="#F8FAFC" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,0,12">
+                                        <TextBlock Text="📊" FontSize="14"/>
+                                        <TextBlock Text="结构优化设置" FontSize="14" FontWeight="Bold" Foreground="#1A2533"/>
+                                    </StackPanel>
+                                    
+                                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
+                                        <StackPanel>
+                                            <!-- 表头 -->
+                                            <Grid ColumnDefinitions="2*,1*,1*" Background="#F1F5F9">
+                                                <TextBlock Grid.Column="0" Text="产品型号" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="1" Text="结构优化" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                                <TextBlock Grid.Column="2" Text="溢价/折扣" FontSize="10" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                                            </Grid>
+                                            
+                                            <!-- 数据行 -->
+                                            <ItemsControl ItemsSource="{Binding ProductStructures}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid ColumnDefinitions="2*,1*,1*" Margin="0,2">
+                                                            <TextBlock Grid.Column="0" Text="{Binding ItemModel}" FontSize="11" Foreground="#1A2533" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="1" Text="{Binding PriceAdjustment, StringFormat=\{0:F2\}}" FontSize="11" Foreground="#D97706" Padding="8,6"/>
+                                                            <TextBlock Grid.Column="2" Text="{Binding PremiumDiscount, StringFormat=\{0:F2\}}" FontSize="11" Foreground="#D97706" Padding="8,6"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+            
+            <!-- 底部按钮区域 -->			
+            <Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                    <Button Content="关 闭"
+                            Background="#3B82F6"
+                            Foreground="White"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Padding="24,10"
+                            CornerRadius="8"
+                            Width="100"
+                            Click="CloseButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

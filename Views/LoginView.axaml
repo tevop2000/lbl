@@ -1,0 +1,166 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AgentManagement.Avalonia.Views.LoginView"
+             x:DataType="vm:LoginViewModel"
+             MinWidth="900" MinHeight="550">
+    
+    <Design.DataContext>
+        <vm:LoginViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,400">
+        <!-- 左侧图片区域 -->
+        <Border Grid.Column="0" 
+               Background="#1E40AF"
+               Padding="40">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                <TextBlock Text="📊" 
+                          FontSize="80"
+                          HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="超威数智营"
+                          FontSize="28"
+                          FontWeight="Bold"
+                          Foreground="White"
+                          HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="Agent Management System"
+                          FontSize="16"
+                          Foreground="#BFDBFE"
+                          HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="数据驱动决策 · 智能分析平台"
+                          FontSize="14"
+                          Foreground="#93C5FD"
+                          HorizontalAlignment="Center"
+                          Margin="0,20,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 右侧登录表单 -->
+        <Border Grid.Column="1"
+               Background="{DynamicResource SystemAltHighColor}"
+               Padding="40,30">
+            <StackPanel VerticalAlignment="Center" Spacing="20">
+                <!-- 标题 -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="欢迎登录"
+                              FontSize="24"
+                              FontWeight="Bold"
+                              Foreground="{DynamicResource SystemBaseHighColor}"/>
+                    
+                    <TextBlock Text="请输入您的账号信息"
+                              FontSize="13"
+                              Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                </StackPanel>
+
+                <!-- 用户名输入 -->
+                <StackPanel Spacing="6">
+                    <TextBlock Text="用户名"
+                              FontSize="13"
+                              FontWeight="SemiBold"
+                              Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                    
+                    <TextBox Text="{Binding Username}"
+                            Watermark="请输入用户名"
+                            Padding="12,10"
+                            CornerRadius="6"
+                            BorderBrush="{DynamicResource SystemBaseLowColor}"
+                            BorderThickness="1"
+                            FontSize="14">
+                        <TextBox.Styles>
+                            <Style Selector="TextBox:pointerover /template/ Border">
+                                <Setter Property="BorderBrush" Value="#3B82F6"/>
+                            </Style>
+                            <Style Selector="TextBox:focus /template/ Border">
+                                <Setter Property="BorderBrush" Value="#3B82F6"/>
+                            </Style>
+                        </TextBox.Styles>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- 密码输入 -->
+                <StackPanel Spacing="6">
+                    <TextBlock Text="密码"
+                              FontSize="13"
+                              FontWeight="SemiBold"
+                              Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                    
+                    <!-- 密码输入（暂时使用TextBox，因为PasswordBox在某些版本中可能不可用） -->
+					<TextBox Text="{Binding Password}"
+							 Watermark="请输入密码"
+							 Padding="12,10"
+							 CornerRadius="6"
+							 BorderBrush="{DynamicResource SystemBaseLowColor}"
+							 BorderThickness="1"
+							 FontSize="14"
+							 PasswordChar="*">
+						<TextBox.Styles>
+							<Style Selector="TextBox:pointerover /template/ Border">
+								<Setter Property="BorderBrush" Value="#3B82F6"/>
+							</Style>
+							<Style Selector="TextBox:focus /template/ Border">
+								<Setter Property="BorderBrush" Value="#3B82F6"/>
+							</Style>
+						</TextBox.Styles>
+					</TextBox>
+                </StackPanel>
+
+                <!-- 记住我 
+                <CheckBox Content="记住我"
+                         IsChecked="{Binding RememberMe}"
+                         FontSize="13"
+                         Foreground="{DynamicResource SystemBaseMediumColor}"/>-->
+
+                <!-- 错误提示 -->
+                <Border Background="#FEF2F2"
+                       Padding="12,10"
+                       CornerRadius="6"
+                       BorderBrush="#FECACA"
+                       BorderThickness="1"
+                       IsVisible="{Binding HasError}">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                              Foreground="#DC2626"
+                              FontSize="13"
+                              TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- 登录按钮 -->
+                <Button Content="登 录"
+                       Command="{Binding LoginCommand}"
+                       Background="#3B82F6"
+                       Foreground="White"
+                       Padding="12,12"
+                       CornerRadius="6"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Cursor="Hand">
+					<Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="Background" Value="#2563EB"/>
+                        </Style>
+                        <Style Selector="Button:pressed">
+                            <Setter Property="Background" Value="#1D4ED8"/>
+                        </Style>
+                        <Style Selector="Button:disabled">
+                            <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
+
+                <!-- 状态消息 -->
+                <TextBlock Text="{Binding StatusMessage}"
+                          FontSize="{StaticResource DefaultFontSize}"
+                          Foreground="{DynamicResource SystemBaseMediumColor}"
+                          HorizontalAlignment="Center"
+                          IsVisible="{Binding IsBusy}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
+

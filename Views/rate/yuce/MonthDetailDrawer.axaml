@@ -1,0 +1,191 @@
+﻿<Window x:Class="AgentManagement.Avalonia.Views.rate.yuce.MonthDetailDrawer"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AgentManagement.Avalonia.ViewModels.rate.yuce"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="700"
+        Width="500" Height="700"
+        Title="{Binding WindowTitle}"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        x:DataType="vm:MonthDetailDrawerViewModel">
+
+    <ScrollViewer>
+        <Border Padding="24">
+            <StackPanel Spacing="24">
+            <!-- 标题 -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding WindowTitle}" FontSize="18" FontWeight="SemiBold" Foreground="#111827"/>
+                <TextBlock Text="查看当月固定成本、产品明细与利润归因" FontSize="{StaticResource DefaultFontSize}" Foreground="#6B7280"/>
+            </StackPanel>
+
+            <!-- 固定成本明细 -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="固定成本明细" FontSize="14" FontWeight="SemiBold" Foreground="#111827"/>
+                <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8">
+                    <StackPanel>
+                        <!-- 电池资金成本 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="电池资金成本" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding BatteryCapitalCost, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" FontSize="13" Foreground="#111827"/>
+                            </Grid>
+                        </Border>
+                        <!-- 租金 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="门面/仓库租金" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding Rent, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" FontSize="13" Foreground="#111827"/>
+                            </Grid>
+                        </Border>
+                        <!-- 工资 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="固定工资" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding Salaries, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" FontSize="13" Foreground="#111827"/>
+                            </Grid>
+                        </Border>
+                        <!-- 车辆费用 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="车辆油费保险" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding VehicleCost, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" FontSize="13" Foreground="#111827"/>
+                            </Grid>
+                        </Border>
+                        <!-- 水电费 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="水电招待费" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding Utilities, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" FontSize="13" Foreground="#111827"/>
+                            </Grid>
+                        </Border>
+                        <!-- 承兑收益 -->
+                        <Border Padding="12,8" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                            <Grid>
+                                <TextBlock Text="承兑收益" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding AcceptanceIncome, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" Foreground="#10B981"/>
+                            </Grid>
+                        </Border>
+                        <!-- 售后收益 -->
+                        <Border Padding="12,8">
+                            <Grid>
+                                <TextBlock Text="售后收益" FontSize="13" Foreground="#4B5563"/>
+                                <TextBlock Text="{Binding AfterSalesIncome, StringFormat='¥{0:N0}'}" HorizontalAlignment="Right" Foreground="#10B981"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 产品明细 -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="产品明细" FontSize="14" FontWeight="SemiBold" Foreground="#111827"/>
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8">
+                    <DataGrid ItemsSource="{Binding ProductList}"
+                             AutoGenerateColumns="False"
+                             HeadersVisibility="Column"
+                             GridLinesVisibility="Horizontal"
+                             IsReadOnly="True"
+                             Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="型号" Binding="{Binding Model}" Width="*"/>
+                            <DataGridTextColumn Header="占比" Binding="{Binding Proportion, StringFormat='{}{0:P1}'}" Width="100"/>
+                            <DataGridTextColumn Header="单只毛利" Binding="{Binding UnitProfit, StringFormat='¥{0:N0}'}" Width="120"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </StackPanel>
+
+            <!-- 利润贡献分解 -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="利润贡献分解" FontSize="14" FontWeight="SemiBold" Foreground="#111827"/>
+                <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+                    <!-- 销量增长贡献 -->
+                    <Border Grid.Column="0" Grid.Row="0" Background="#ECFDF5" BorderBrush="#A7F3D0" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,6,6">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="销量增长贡献" FontSize="11" Foreground="#059669"/>
+                            <TextBlock Text="{Binding SalesGrowthProfit, StringFormat='¥{0:N0}'}" FontSize="18" FontWeight="SemiBold" Foreground="#047857"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- 结构优化贡献 -->
+                    <Border Grid.Column="1" Grid.Row="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="12" Margin="6,0,0,6">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="结构优化贡献" FontSize="11" Foreground="#2563EB"/>
+                            <TextBlock Text="{Binding StructureOptimizeProfit, StringFormat='¥{0:N0}'}" FontSize="18" FontWeight="SemiBold" Foreground="#1D4ED8"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- 溢价贡献 -->
+                    <Border Grid.Column="0" Grid.Row="1" Background="#FFFBEB" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,6,6,0">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="溢价贡献" FontSize="11" Foreground="#D97706"/>
+                            <TextBlock Text="{Binding PremiumProfit, StringFormat='¥{0:N0}'}" FontSize="18" FontWeight="SemiBold" Foreground="#B45309"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- 提成扣减 -->
+                    <Border Grid.Column="1" Grid.Row="1" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="8" Padding="12" Margin="6,6,0,0">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="提成扣减" FontSize="11" Foreground="#DC2626"/>
+                            <TextBlock Text="{Binding TotalCommission, StringFormat='¥{0:N0}'}" FontSize="18" FontWeight="SemiBold" Foreground="#B91C1C"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+
+            <!-- 归因瀑布图 -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="归因瀑布图" FontSize="14" FontWeight="SemiBold" Foreground="#111827"/>
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" Padding="16">
+                    <StackPanel Spacing="12">
+                        <!-- LiveCharts2 柱状图 -->
+                        <lvc:CartesianChart 
+                            Series="{Binding WaterfallSeries}"
+                            XAxes="{Binding XAxes}"
+                            YAxes="{Binding YAxes}"
+                            Height="300"
+                            TooltipPosition="Top"
+                            FontFamily="Microsoft YaHei"/>
+                        
+                        <!-- 说明 -->
+                        <Border Background="#F9FAFB" Padding="12" CornerRadius="6">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="起点 + 销量增长 + 结构优化 + 溢价 - 提成 = 最终净利润" 
+                                          FontSize="11" Foreground="#9CA3AF" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16" Margin="0,4,0,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Border Background="#64748B" Width="12" Height="12" CornerRadius="2"/>
+                                        <TextBlock Text="起点/最终" FontSize="10" Foreground="#6B7280"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Border Background="#10B981" Width="12" Height="12" CornerRadius="2"/>
+                                        <TextBlock Text="增长" FontSize="10" Foreground="#6B7280"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Border Background="#EF4444" Width="12" Height="12" CornerRadius="2"/>
+                                        <TextBlock Text="扣减" FontSize="10" Foreground="#6B7280"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 关闭按钮 -->
+            <Button Content="关闭"
+                   Command="{Binding CloseCommand}"
+                   HorizontalAlignment="Stretch"
+                   Background="#F3F4F6"
+                   Foreground="#374151"
+                   BorderThickness="1"
+                   BorderBrush="#D1D5DB"
+                   Padding="12,10"
+                   CornerRadius="6"
+                   FontSize="13"
+                   FontWeight="Medium"/>
+        </StackPanel>
+        </Border>
+    </ScrollViewer>
+</Window>
+

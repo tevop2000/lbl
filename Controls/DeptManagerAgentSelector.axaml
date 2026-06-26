@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AgentManagement.Avalonia.ViewModels.Controls"
+             xmlns:controls="clr-namespace:AgentManagement.Avalonia.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="100"
+             x:Class="AgentManagement.Avalonia.Controls.DeptManagerAgentSelector"
+             x:DataType="vm:DeptManagerAgentSelectorViewModel">
+    
+    <Grid ColumnDefinitions="Auto,Auto,Auto">
+        <!-- 级联部门选择器（战区 → 渠道部 → 大区） -->
+        <StackPanel Grid.Column="0" MinWidth="250">
+            <TextBlock Text="部门" FontSize="11" Foreground="#6B7280" Margin="0,0,0,8"/>
+            <controls:CascadingDeptSelector x:Name="DeptSelector"
+										   Width="250"
+                                           SelectedWarZone="{Binding SelectedWarZone, Mode=TwoWay}"
+                                           SelectedChannelDept="{Binding SelectedChannelDept, Mode=TwoWay}"
+                                           SelectedRegionManager="{Binding SelectedRegionManager, Mode=TwoWay}"
+										   IsReadOnly="{Binding IsManagerReadOnly}"
+                                           SelectionCompleted="OnDeptSelectionCompleted"/>
+        </StackPanel>
+
+        <!-- 业务经理选择器 -->
+        <StackPanel Grid.Column="1" MinWidth="120" Margin="16,0,0,0">
+            <TextBlock Text="业务经理" FontSize="11" Foreground="#6B7280" Margin="0,0,0,8"/>
+            
+            <!-- 代理商角色：显示文本（完全不可编辑）-->
+            <TextBox IsReadOnly="True"
+                     Text="{Binding ManagerDisplayText}"
+                     Width="120"
+                     Height="32"
+                     FontSize="13"
+                     BorderThickness="1"                 
+                     VerticalContentAlignment="Center"
+                     IsHitTestVisible="False"
+                     IsVisible="{Binding IsManagerReadOnly}"/> 
+			
+            <!-- 非代理商角色：显示下拉框 -->
+            <ComboBox ItemsSource="{Binding ManagerList}" 
+                      SelectedItem="{Binding SelectedManager}"
+                      DisplayMemberBinding="{Binding NickName}"
+                      PlaceholderText="请选择业务经理"
+					  Width="120"      
+                      Height="32"
+                      FontSize="13"
+                      IsVisible="{Binding !IsManagerReadOnly}"/>
+        </StackPanel>
+
+        <!-- 代理商选择器 -->
+        <StackPanel Grid.Column="2" MinWidth="150" Margin="16,0,0,0">
+            <TextBlock Text="代理商" FontSize="11" Foreground="#6B7280" Margin="0,0,0,8"/>
+            <ComboBox ItemsSource="{Binding AgentList}" 
+                      SelectedItem="{Binding SelectedAgent}"
+                      DisplayMemberBinding="{Binding AgentName}"
+                      PlaceholderText="请选择代理商"
+					  Width="150"      
+                      Height="32"
+                      FontSize="13"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

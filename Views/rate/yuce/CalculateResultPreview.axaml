@@ -1,0 +1,128 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AgentManagement.Avalonia.Views.rate.yuce.CalculateResultPreview"
+        Title=""
+        Width="480"
+        Height="750"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        SystemDecorations="None">
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0" 
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="📊 计算结果预览" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                        <TextBlock Text="CVP模型计算结果对比" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕" 
+                            Click="CloseButton_Click"
+                            Background="Transparent" 
+                            Foreground="#64748B" 
+                            FontSize="22" 
+                            Padding="10"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+            
+            <!-- 内容区域 -->
+            <ScrollViewer Grid.Row="1" Padding="24,16,24,0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12">
+                    <!-- 各项指标 -->
+                    <StackPanel Spacing="10" Margin="0,0,0,40">
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="达成率" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="AchievementRateText" Text="0%" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="盈亏平衡点达成销量" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="BreakSalesText" Text="0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="提升后销量" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="ImprovedSalesText" Text="0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="销量增长毛利" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="SalesGrowthProfitText" Text="¥0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="结构优化毛利" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="StructureOptimizeProfitText" Text="¥0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="溢价毛利" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="PremiumProfitText" Text="¥0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F8FAFC" Padding="14,10" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="总超出毛利" FontSize="13" Foreground="#64748B" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="TotalExtraProfitText" Text="¥0" FontSize="22" FontWeight="Bold" Foreground="#1A2533"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Background="#F0FDF4" Padding="14,10" CornerRadius="12" BorderBrush="#22C55E" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="调整后净利润" FontSize="13" FontWeight="SemiBold" Foreground="#166534" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="AdjustedNetProfitText" Text="¥0" FontSize="22" FontWeight="Bold" Foreground="#22C55E"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+            
+            <!-- 底部按钮区域 -->
+            <Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button x:Name="ApplyButton" Content="✓ 应用更改" 
+                            Background="#3B82F6"
+                            Foreground="White"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Padding="20,12"
+                            CornerRadius="12"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Width="180"
+                            Click="ApplyButton_Click"/>
+                    <Button Content="↩ 取消" 
+                            Background="White"
+                            Foreground="#64748B"
+                            BorderBrush="#E2E8F0"
+                            BorderThickness="1"
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Padding="20,12"
+                            CornerRadius="12"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            Width="180"
+                            Click="CancelButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

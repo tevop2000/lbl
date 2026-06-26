@@ -1,0 +1,122 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+        xmlns:converters="using:AgentManagement.Avalonia.Converters"
+        x:Class="AgentManagement.Avalonia.Views.UnreadMessagesDialog"
+        x:DataType="vm:UnreadMessagesDialogViewModel"
+        Title="未读消息"
+        Width="600"
+        Height="500"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="12,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <TextBlock Text="🔔" FontSize="28" VerticalAlignment="Center"/>
+                        <TextBlock Text="未读消息" FontSize="18" FontWeight="Bold" Foreground="#1A2533" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- 消息列表 -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="10" Margin="16">
+                    <!-- 加载中 -->
+                    <StackPanel IsVisible="{Binding IsLoading}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                        <TextBlock Text="加载中..." FontSize="14" Foreground="#64748B"/>
+                    </StackPanel>
+                    
+                    <!-- 无消息 -->
+                    <Border IsVisible="{Binding Messages.Count, Converter={x:Static converters:EqualZeroConverter.Instance}}" 
+                            CornerRadius="12" 
+                            Background="#F9FAFB" 
+                            Padding="40"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center"/>
+                            <TextBlock Text="暂无未读消息" FontSize="14" Foreground="#64748B" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- 消息列表 -->
+                    <ItemsControl ItemsSource="{Binding Messages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#F8FAFC" 
+                                        CornerRadius="12" 
+                                        Padding="16"
+                                        BorderBrush="#E2E8F0" 
+                                        BorderThickness="1"
+                                        Margin="0,6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Spacing="8" Margin="0,0,10,0">
+                                            <!-- 标题 -->
+                                            <TextBlock Text="{Binding Title}" 
+                                                      FontSize="15" 
+                                                      FontWeight="Bold" 
+                                                      Foreground="#1A2533"/>
+                                            <!-- 发送人 -->
+                                            <TextBlock Text="{Binding SenderName, StringFormat='发送人: {0}'}" 
+                                                      FontSize="13" 
+                                                      Foreground="#64748B"/>
+                                            <!-- 内容 -->
+                                            <TextBlock Text="{Binding Content}" 
+                                                      TextWrapping="Wrap"
+                                                      FontSize="14" 
+                                                      Foreground="#374151"/>
+                                        </StackPanel>
+                                        <!-- 已读按钮 -->
+                                        <Button Grid.Column="1"
+                                                Content="已读"
+                                                Command="{Binding DataContext.MarkAsReadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                Background="#EFF6FF"
+                                                Foreground="#3B82F6"
+                                                BorderThickness="0"
+                                                Padding="16,8"
+                                                FontSize="13"
+                                                FontWeight="Medium"
+                                                CornerRadius="8"
+                                                VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 底部关闭按钮 -->
+            <Border Grid.Row="2"
+                   Background="#F9FAFB"
+                   Padding="24,16"
+                   BorderBrush="#E5E7EB"
+                   BorderThickness="0,1,0,0"
+                   CornerRadius="0,0,20,20">
+                <Button Content="关闭"
+                        Click="CloseButton_Click"
+                        Background="#3B82F6"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Padding="40,10"
+                        FontSize="14"
+                        FontWeight="Medium"
+                        CornerRadius="8"
+                        HorizontalAlignment="Right"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

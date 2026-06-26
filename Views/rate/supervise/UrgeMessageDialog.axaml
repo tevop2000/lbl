@@ -1,0 +1,95 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels.rate.supervise"
+        x:Class="AgentManagement.Avalonia.Views.rate.supervise.UrgeMessageDialog"
+        x:DataType="vm:UrgeMessageDialogViewModel"
+        Title="催办提醒"
+        Width="500" Height="400"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="12,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <TextBlock Text="⏰" FontSize="28" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding DialogTitle}" FontSize="18" FontWeight="Bold" Foreground="#1A2533" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- 内容区域 -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="20" Margin="24,20">
+                    <!-- 提示文本 -->
+                    <TextBlock Text="{Binding ReminderText}" 
+                              TextWrapping="Wrap"
+                              FontSize="15"
+                              Foreground="#374151"/>
+                    
+                    <!-- 备注输入 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="备注（可选）" 
+                                  FontSize="13"
+                                  FontWeight="Medium"
+                                  Foreground="#64748B"/>
+                        <TextBox Text="{Binding RemarkContent}"
+                                 Watermark="例如：请本周五前完成 4 月份预测填报"
+                                 Height="100"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 BorderBrush="#E5E7EB"
+                                 BorderThickness="1"
+                                 CornerRadius="8"
+                                 Padding="12"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 底部按钮 -->
+            <Border Grid.Row="2"
+                   Background="#F9FAFB"
+                   Padding="24,16"
+                   BorderBrush="#E5E7EB"
+                   BorderThickness="0,1,0,0"
+                   CornerRadius="0,0,20,20">
+                <StackPanel Orientation="Horizontal" 
+                           HorizontalAlignment="Right"
+                           Spacing="12">
+                    <Button Content="取消"
+                           Click="CancelButton_Click"
+                           Background="White"
+                           Foreground="#64748B"
+                           BorderBrush="#D1D5DB"
+                           BorderThickness="1"
+                           Padding="28,10"
+                           FontSize="14"
+                           FontWeight="Medium"
+                           CornerRadius="8"/>
+                    
+                    <Button Content="✉️ 发送提醒"
+                           Click="SendButton_Click"
+                           Background="#3B82F6"
+                           Foreground="White"
+                           BorderThickness="0"
+                           Padding="28,10"
+                           FontSize="14"
+                           FontWeight="Medium"
+                           CornerRadius="8">
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

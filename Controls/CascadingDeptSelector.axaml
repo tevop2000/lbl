@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:AgentManagement.Avalonia.Models"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="AgentManagement.Avalonia.Controls.CascadingDeptSelector"
+             x:Name="Root">
+    
+    <Grid>
+        <!-- 显示文本框 -->
+        <Border Name="PART_TriggerBorder"
+                Background="Transparent"
+                BorderBrush="{DynamicResource TextControlBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Cursor="Hand"
+                Height="32"
+                Padding="0,0">
+            <TextBox Name="PART_DisplayText"
+                     IsReadOnly="True"
+                     
+                     BorderThickness="0"
+                     Padding="8,0"
+                     VerticalAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     FontSize="13"
+                 
+                     IsHitTestVisible="False"/>
+        </Border>
+        
+        <!-- 下拉弹窗 -->
+        <Popup Name="PART_Popup"
+               PlacementTarget="{Binding #PART_DisplayText}"
+               Placement="Bottom"
+               IsLightDismissEnabled="True"
+               Width="400">
+            <Border Background="{DynamicResource SystemAltHighColor}"
+                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    BoxShadow="0 4 6 #1A000000">
+                <StackPanel Spacing="0">
+                    <!-- 标题栏 -->
+                    <Border Background="{DynamicResource SystemChromeLowColor}"
+                            BorderBrush="{DynamicResource SystemBaseLowColor}"
+                            BorderThickness="0,0,0,1"
+                            Padding="12,8">
+                        <TextBlock Text="选择部门" FontWeight="Medium" FontSize="13" Foreground="{DynamicResource SystemBaseHighColor}"/>
+                    </Border>
+                    
+                    <!-- 三级联动列表 -->
+                    <Grid ColumnDefinitions="*,*,*" Height="250">
+                        <!-- 战区列表 -->
+                        <Border Grid.Column="0" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,1,0">
+                            <StackPanel>
+                                <Border Background="{DynamicResource SystemListLowColor}" Padding="8,6">
+                                    <TextBlock Text="战区" FontSize="11" FontWeight="Medium" Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                                </Border>
+                                <ListBox Name="PART_WarZoneList"
+                                         ItemsSource="{Binding WarZoneList, ElementName=Root}"
+                                         SelectedItem="{Binding SelectedWarZone, ElementName=Root, Mode=TwoWay}"
+                                         Background="Transparent"
+                                         BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DeptInfo">
+                                            <TextBlock Text="{Binding DisplayName}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- 渠道部列表 -->
+                        <Border Grid.Column="1" BorderBrush="{DynamicResource SystemBaseLowColor}" BorderThickness="0,0,1,0">
+                            <StackPanel>
+                                <Border Background="{DynamicResource SystemListLowColor}" Padding="8,6">
+                                    <TextBlock Text="渠道部" FontSize="11" FontWeight="Medium" Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                                </Border>
+                                <ListBox Name="PART_ChannelDeptList"
+                                         ItemsSource="{Binding ChannelDeptList, ElementName=Root}"
+                                         SelectedItem="{Binding SelectedChannelDept, ElementName=Root, Mode=TwoWay}"
+                                         Background="Transparent"
+                                         BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DeptInfo">
+                                            <TextBlock Text="{Binding DisplayName}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- 大区经理列表 -->
+                        <Border Grid.Column="2">
+                            <StackPanel>
+                                <Border Background="{DynamicResource SystemListLowColor}" Padding="8,6">
+                                    <TextBlock Text="大区经理" FontSize="11" FontWeight="Medium" Foreground="{DynamicResource SystemBaseMediumColor}"/>
+                                </Border>
+                                <ListBox Name="PART_RegionManagerList"
+                                         ItemsSource="{Binding RegionManagerList, ElementName=Root}"
+                                         SelectedItem="{Binding SelectedRegionManager, ElementName=Root, Mode=TwoWay}"
+                                         Background="Transparent"
+                                         BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DeptInfo">
+                                            <TextBlock Text="{Binding DisplayName}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

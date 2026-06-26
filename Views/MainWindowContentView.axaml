@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+             xmlns:converters="using:AgentManagement.Avalonia.Converters"
+             x:Class="AgentManagement.Avalonia.Views.MainWindowContentView"
+             x:DataType="vm:MainWindowViewModel"
+             MinWidth="1200" MinHeight="800">
+    
+    <Grid RowDefinitions="Auto,*">
+        <!-- 顶部用户信息栏 - 使用主题资源 -->
+        <Border Grid.Row="0" 
+                Background="{DynamicResource SystemAccentColor}" 
+                Padding="20,10">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" 
+                          Text="{Binding Title}" 
+                          FontSize="18" 
+                          FontWeight="Bold"
+                          Foreground="White"
+                          VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" 
+                           Orientation="Horizontal" 
+                           Spacing="15"
+                           VerticalAlignment="Center">
+                    <!-- 消息铃铛图标 -->
+                    <Grid Width="40" Height="40">
+                        <!-- 铃铛图标按钮 -->
+                        <Button Background="Transparent" 
+                                BorderThickness="0" 
+                                Padding="8"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Command="{Binding ShowUnreadMessagesCommand}">
+                            <TextBlock Text="🔔" 
+                                      FontSize="22"/>
+                        </Button>
+                        
+                        <!-- 未读消息数字 - 仅在有未读消息时显示 -->
+                        <Border IsVisible="{Binding UnreadMessageCount, Converter={x:Static converters:GreaterThanZeroConverter.Instance}}"
+                                Background="#FF0000" 
+                                CornerRadius="10"
+                                Padding="5,1"
+                                MinWidth="18"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Margin="0,0,0,0">
+                            <TextBlock Text="{Binding UnreadMessageCount}" 
+                                      Foreground="White" 
+                                      FontSize="10" 
+                                      FontWeight="Bold"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                    
+                    <TextBlock Text="{Binding CurrentUser.RealName}" 
+                              Foreground="White" 
+                              FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 主内容区 -->
+        <Grid Grid.Row="1" ColumnDefinitions="220,*">
+            <!-- 左侧导航菜单 - 使用主题资源 -->
+            <Border Grid.Column="0" 
+                    Background="{DynamicResource SystemChromeLowColor}" 
+                    BorderBrush="{DynamicResource SystemBaseLowColor}"
+                    BorderThickness="0,0,1,0">
+                <ScrollViewer>
+                    <TreeView x:Name="MenuTreeView" ItemsSource="{Binding MenuItems}" Margin="10">
+                        <TreeView.ItemTemplate>
+                            <TreeDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{Binding Title}" 
+                                               Foreground="{DynamicResource SystemBaseHighColor}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </TreeDataTemplate>
+                        </TreeView.ItemTemplate>
+                        <TreeView.Styles>
+                            <!-- 基础 TreeViewItem 样式 -->
+                            <Style Selector="TreeViewItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Padding" Value="4,0"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="CornerRadius" Value="6"/>
+                                <Setter Property="IsExpanded" Value="True"/>
+                            </Style>
+                            <!-- 鼠标悬停 - 使用主题资源 -->
+                            <Style Selector="TreeViewItem:pointerover">
+                                <Setter Property="Background" Value="{DynamicResource SystemListLowColor}"/>
+                            </Style>
+                            <!-- 选中状态 - 使用主题资源 -->
+                            <Style Selector="TreeViewItem:selected">
+                                <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2}"/>
+                            </Style>
+                            <!-- 调整 ContentPresenter 内边距 -->
+                            <Style Selector="TreeViewItem /template/ ContentPresenter">
+                                <Setter Property="Padding" Value="8,6"/>
+                            </Style>
+                            <!-- 确保箭头按钮背景透明，跟随整体 -->
+                            <Style Selector="TreeViewItem /template/ ToggleButton">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Padding" Value="6,6"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </TreeView.Styles>
+                    </TreeView>
+                </ScrollViewer>
+            </Border>
+
+            <!-- 右侧内容区域 -->
+            <ContentControl Grid.Column="1" 
+                          Content="{Binding CurrentView}"
+                          Margin="0"/>
+        </Grid>
+    </Grid>
+</UserControl>

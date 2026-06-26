@@ -1,0 +1,270 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:AgentManagement.Avalonia.ViewModels.rate.supervise"
+             xmlns:controls="clr-namespace:AgentManagement.Avalonia.Controls"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="AgentManagement.Avalonia.Views.rate.supervise.index"
+             x:DataType="viewModels:indexViewModel">
+  <UserControl.DataContext>
+    <viewModels:indexViewModel />
+  </UserControl.DataContext>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Background="#F7F9FB">
+      <!-- 部门-业务经理-代理商选择器 -->
+      <Border Background="#F7F9FB" Margin="0" Padding="24,16">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <!-- 左侧：DeptManagerAgentSelector -->
+            <ColumnDefinition Width="Auto"/>
+            <!-- 间距 -->
+            <ColumnDefinition Width="24"/>
+            <!-- 右侧：占位 -->
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <controls:DeptManagerAgentSelector x:Name="SelectorControl" Grid.Column="0"/>
+        </Grid>
+      </Border>
+      
+      <!-- 顶部分割线 -->
+      <Border Height="1" Background="#E2E8F0" Margin="0"/>
+      
+      <!-- 标题栏 -->
+      <Grid Margin="24,24,24,0">
+        <StackPanel>
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <Border Width="36" Height="36" Background="#3B82F6" CornerRadius="10" Margin="0,0,12,0">
+                <Canvas Width="36" Height="36">
+                  <Ellipse Canvas.Left="10" Canvas.Top="8" Width="6" Height="6" Fill="White"/>
+                  <Path Canvas.Left="18" Canvas.Top="8" Width="10" Height="10" Data="M18 8 L28 8 L23 16 Z" Fill="White"/>
+                  <Path Canvas.Left="20" Canvas.Top="14" Width="6" Height="6" Data="M20 14 L26 14 L23 19 Z" Fill="White"/>
+                </Canvas>
+              </Border>
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="督办中心" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                <TextBlock Text="战区视图 · 按渠道部汇总" FontSize="14" Foreground="#64748B" Margin="8,0,0,0"/>
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+          <TextBlock Text="{Binding CurrentView}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="48,8,0,0"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- 统计卡片 -->
+      <Grid Margin="16,24,16,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 管辖业务经理 -->
+        <Border Background="White" CornerRadius="12" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Grid.Column="0">
+          <StackPanel Orientation="Horizontal">
+            <Border Width="36" Height="36" Background="#EEF2FF" CornerRadius="10" Margin="0,0,12,0">
+              <Canvas Width="36" Height="36">
+                <Ellipse Canvas.Left="8" Canvas.Top="8" Width="8" Height="8" Fill="#6366F1"/>
+                <Ellipse Canvas.Left="10" Canvas.Top="18" Width="16" Height="10" Fill="#6366F1"/>
+              </Canvas>
+            </Border>
+            <StackPanel>
+              <TextBlock Text="管辖业务经理" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+              <TextBlock Text="{Binding PredictionAgentCount, StringFormat='覆盖 {0} 个代理商'}" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+              <TextBlock Text="{Binding BusinessManagerCount}" FontSize="28" FontWeight="Bold" Foreground="#1A2533" Margin="0,4,0,0"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 预测填报完成率 -->
+        <Border Background="White" CornerRadius="12" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Grid.Column="1" Margin="16,0,0,0">
+          <StackPanel Orientation="Horizontal">
+            <Border Width="36" Height="36" Background="#ECFDF5" CornerRadius="10" Margin="0,0,12,0">
+              <Canvas Width="36" Height="36">
+                <Ellipse Canvas.Left="10" Canvas.Top="10" Width="16" Height="16" Fill="#10B981"/>
+                <Path Canvas.Left="12" Canvas.Top="13" Width="12" Height="8" Data="M12 17 L16 21 L24 13" Stroke="White" StrokeThickness="2" Fill="Transparent"/>
+              </Canvas>
+            </Border>
+            <StackPanel>
+              <TextBlock Text="预测填报完成率" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+              <TextBlock Text="{Binding CompletionRateInfo}" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+              <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <TextBlock Text="{Binding CompletionRate}" FontSize="28" FontWeight="Bold" Foreground="#10B981"/>
+                <TextBlock Text="%" FontSize="16" Foreground="#10B981" Margin="2,4,0,0"/>
+              </StackPanel>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 本季实际数据导入 -->
+        <Border Background="White" CornerRadius="12" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Grid.Column="2" Margin="16,0,0,0">
+          <StackPanel Orientation="Horizontal">
+            <Border Width="36" Height="36" Background="#FFFBEB" CornerRadius="10" Margin="0,0,12,0">
+              <Canvas Width="36" Height="36">
+                <Ellipse Canvas.Left="8" Canvas.Top="8" Width="20" Height="20" Fill="Transparent" Stroke="#F59E0B" StrokeThickness="2"/>
+              </Canvas>
+            </Border>
+            <StackPanel>
+              <TextBlock Text="本季实际数据导入" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+              <TextBlock Text="{Binding ImportRateInfo}" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+              <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <TextBlock Text="{Binding ImportRate}" FontSize="28" FontWeight="Bold" Foreground="#F59E0B"/>
+                <TextBlock Text="%" FontSize="16" Foreground="#F59E0B" Margin="2,4,0,0"/>
+              </StackPanel>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- 需催办业务经理 -->
+        <Border Background="White" CornerRadius="12" Padding="16" BorderBrush="#E2E8F0" BorderThickness="1" Grid.Column="3" Margin="16,0,0,0">
+          <StackPanel Orientation="Horizontal">
+            <Border Width="36" Height="36" Background="#FEF2F2" CornerRadius="10" Margin="0,0,12,0">
+              <Canvas Width="36" Height="36">
+                <Polygon Points="18,6 30,30 6,30" Fill="#EF4444"/>
+                <Ellipse Canvas.Left="15" Canvas.Top="18" Width="6" Height="6" Fill="White"/>
+              </Canvas>
+            </Border>
+            <StackPanel>
+              <TextBlock Text="需催办业务经理" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+              <TextBlock Text="{Binding UrgentManagerInfo}" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+              <TextBlock Text="{Binding UrgentManagerCount}" FontSize="28" FontWeight="Bold" Foreground="#EF4444" Margin="0,4,0,0"/>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <!-- 内容区域 -->
+      <Border Margin="16,24,16,32" Background="White" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1">
+        <StackPanel>
+          <!-- Tab 切换 -->
+          <Grid Margin="24,20,24,0" ColumnDefinitions="*,*">
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+              <!-- 预测填报 Tab -->
+              <Border Cursor="Hand" Margin="0,0,24,0" PointerPressed="OnPredictionTabClicked">
+                <StackPanel>
+                  <TextBlock Text="预测填报" FontSize="14" FontWeight="Medium" Foreground="{Binding PredictionTabTextColor}"/>
+                  <Border Height="2" Background="{Binding PredictionTabIndicatorColor}" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Border>
+              <!-- 实际数据导入 Tab -->
+              <Border Cursor="Hand" PointerPressed="OnImportTabClicked">
+                <StackPanel>
+                  <TextBlock Text="实际数据导入" FontSize="14" FontWeight="Medium" Foreground="{Binding ImportTabTextColor}"/>
+                  <Border Height="2" Background="{Binding ImportTabIndicatorColor}" Margin="0,4,0,0"/>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+              <Border Padding="10,6" CornerRadius="6" Background="{Binding AllFilterBackgroundColor}" Cursor="Hand" 
+                      PointerPressed="OnAllFilterClicked">
+                <TextBlock Text="全部" FontSize="{StaticResource DefaultFontSize}" FontWeight="Medium" Foreground="{Binding AllFilterTextColor}"/>
+              </Border>
+              <Border Margin="8,0,0,0" Padding="10,6" CornerRadius="6" Background="{Binding CompletedFilterBackgroundColor}" Cursor="Hand"
+                      PointerPressed="OnCompletedFilterClicked">
+                <TextBlock Text="已完成" FontSize="{StaticResource DefaultFontSize}" FontWeight="Medium" Foreground="{Binding CompletedFilterTextColor}"/>
+              </Border>
+            </StackPanel>
+          </Grid>
+
+          <!-- 表格区域 - 根据状态显示 -->
+          <Border Margin="16,16,16,16" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+            <StackPanel>
+              <!-- 表头 -->
+              <Grid ColumnDefinitions="120,120,80,*,100,90,120" Background="#F8FAFC">
+                <TextBlock Grid.Column="0" Text="业务经理" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="1" Text="渠道部" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="2" Text="代理商" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="3" Text="进度" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="4" Text="最近催办" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="5" Text="状态" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+                <TextBlock Grid.Column="6" Text="操作" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+              </Grid>
+
+              <!-- 数据行 - 根据选中的Tab使用不同的数据源 -->
+              <ItemsControl ItemsSource="{Binding CurrentItems}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="viewModels:indexViewModel+SuperviseItem">
+                    <StackPanel>
+                      <Grid ColumnDefinitions="120,120,80,*,100,90,120" Background="White">
+                        <Border Grid.Column="0" Padding="12,10">
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="∨" FontSize="{StaticResource DefaultFontSize}" FontWeight="Medium" Foreground="#64748B" Margin="0,0,4,0"/>
+                            <TextBlock Text="{Binding UserName}" FontSize="13" Foreground="#1A2533"/>
+                          </StackPanel>
+                        </Border>
+                        <TextBlock Grid.Column="1" Text="{Binding ChannelName}" FontSize="13" Foreground="#1A2533" Padding="12,10"/>
+                        <TextBlock Grid.Column="2" Text="{Binding AgentCount}" FontSize="13" Foreground="#1A2533" Padding="12,10"/>
+                        <Grid Grid.Column="3" Margin="12,10,0,10" ColumnDefinitions="*,100">
+                          <ProgressBar Value="{Binding Progress}" Maximum="100" Height="6" VerticalAlignment="Center" Background="#E2E8F0" Foreground="{Binding ProgressColor}" CornerRadius="4"/>
+                          <TextBlock Grid.Column="1" Text="{Binding ProgressText}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock Grid.Column="4" Text="—" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" Padding="12,10"/>
+                        <Border Grid.Column="5" Padding="8,4" CornerRadius="4" Background="{Binding StatusBackground}" HorizontalAlignment="Center" Margin="0,8,0,8">
+                          <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="Medium" Foreground="{Binding StatusColor}"/>
+                        </Border>
+                        <Grid Grid.Column="6" Margin="0,8,0,8" ColumnDefinitions="Auto,Auto" HorizontalAlignment="Center">
+                            <Button IsVisible="{Binding ShowUrgeButton}" 
+                                    Padding="12,4" 
+                                    CornerRadius="4" 
+                                    Background="#F1F5F9" 
+                                    Foreground="#64748B"
+                                    BorderThickness="0"
+                                    Grid.Column="0"
+                                    Command="{Binding ShowUrgeDialogCommand}">
+                                <TextBlock Text="催办" FontSize="11" FontWeight="Medium"/>
+                            </Button>
+                            <Border Padding="6,3" CornerRadius="4" Background="#F1F5F9" Cursor="Hand" Margin="4,0,0,0"
+                                    PointerPressed="OnExpandClicked" Tag="{Binding}" Grid.Column="1">
+                                <TextBlock Text="{Binding ExpandButtonText}" FontSize="11" FontWeight="Medium" Foreground="#64748B"/>
+                            </Border>
+                        </Grid>
+                      </Grid>
+
+                      <!-- 展开的详情 -->
+                      <Border IsVisible="{Binding IsExpanded}" Background="#F8FAFC" Padding="12">
+                        <ItemsControl ItemsSource="{Binding AgentItems}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:indexViewModel+SuperviseAgentItem">
+                              <StackPanel Margin="0,0,0,8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                  <TextBlock Grid.Column="0" Text="{Binding AgentName}" FontSize="13" Foreground="#1A2533"/>
+                                  <TextBlock Grid.Column="1" Text="{Binding CompletionRate, StringFormat={}{0}%}" FontSize="13" Foreground="#64748B"/>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Months}" Margin="0,8,0,0">
+                                  <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                      <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                  </ItemsControl.ItemsPanel>
+                                  <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="viewModels:indexViewModel+DetailMonthItem">
+                                      <Border Width="24" Height="24" CornerRadius="4" 
+                                              Background="{Binding BackgroundColor}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2">
+                                        <TextBlock Text="{Binding Month}" FontSize="11" FontWeight="Medium" 
+                                                   Foreground="{Binding TextColor}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                      </Border>
+                                    </DataTemplate>
+                                  </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                              </StackPanel>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </Border>
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
+

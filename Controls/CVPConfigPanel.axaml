@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+             x:Class="AgentManagement.Avalonia.Controls.CVPConfigPanel"
+             x:DataType="vm:CVPConfigViewModel">
+    
+    <Design.DataContext>
+        <vm:CVPConfigViewModel/>
+    </Design.DataContext>
+
+    <Border Background="White" 
+            CornerRadius="8"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1">
+        <Grid RowDefinitions="Auto,*">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" 
+                   Background="#EFF6FF"
+                   Padding="15,12"
+                   CornerRadius="8,8,0,0"
+                   BorderBrush="#BFDBFE"
+                   BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="🏢" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="产品配置管理"
+                              FontSize="14"
+                              FontWeight="Bold"
+                              Foreground="#1E40AF"
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 内容区域 -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:DataType="vm:CVPConfigViewModel" x:Name="CVPContentPanel">
+                    <ItemsControl ItemsSource="{Binding AgentList}" Name="AgentItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:AgentInfo">
+                                <Border Padding="15,12" 
+                                       BorderBrush="#F3F4F6"
+                                       BorderThickness="0,0,0,1">
+                                                
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- 左侧：头像 + 代理商信息 -->
+                                        <StackPanel Grid.Column="0" 
+                                                   Orientation="Horizontal" 
+                                                   Spacing="12">
+                                            <!-- 圆形头像 -->
+                                            <Border Width="32" 
+                                                   Height="32" 
+                                                   CornerRadius="16"
+                                                   Background="#F3F4F6">
+                                                <TextBlock Text="" 
+                                                          FontSize="16"
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"/>
+                                            </Border>
+            
+                                            <!-- 代理商信息 -->
+                                            <StackPanel VerticalAlignment="Center" Spacing="2">
+                                                <TextBlock x:CompileBindings="False"
+                                                          Text="{Binding #CVPContentPanel.DataContext.CurrentAgent.Name}" 
+                                                          FontSize="14"
+                                                          FontWeight="Medium"
+                                                          Foreground="#111827"/>
+                                                <TextBlock FontSize="12" Foreground="#6B7280">
+                                                    <Run x:CompileBindings="False" Text="{Binding #CVPContentPanel.DataContext.CurrentAgent.ProductCount}"/>
+                                                    <Run Text=" 种产品"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+            
+                                        <!-- 右侧：按钮 -->
+                                        <StackPanel Grid.Column="2" 
+                                                   Orientation="Horizontal" 
+                                                   Spacing="8"
+                                                   VerticalAlignment="Center">
+                                            <!-- 已选择状态按钮 -->
+                                            <Button IsVisible="{Binding IsSelected}"
+                                                   Content="已选择"
+                                                   Background="#3B82F6"
+                                                   Foreground="White"
+                                                   BorderThickness="0"
+                                                   Padding="12,6"
+                                                   CornerRadius="6"
+                                                   FontSize="12"
+                                                   FontWeight="Medium"
+                                                   IsHitTestVisible="False"/>
+                                                        
+                                            <!-- 选择按钮 -->
+                                            <Button IsVisible="{Binding !IsSelected}"
+                                                   Content="选择"
+                                                   x:CompileBindings="False"
+                                                   Command="{Binding #CVPContentPanel.DataContext.SelectAgentCommand}"
+                                                   CommandParameter="{Binding Id}"
+                                                   Background="Transparent"
+                                                   Foreground="#6B7280"
+                                                   BorderBrush="#D1D5DB"
+                                                   BorderThickness="1"
+                                                   Padding="12,6"
+                                                   CornerRadius="6"
+                                                   FontSize="12">
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#F3F4F6"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                            
+                                            <!-- 编辑按钮 -->
+                                            <Button x:CompileBindings="False"
+                                                   Command="{Binding #CVPContentPanel.DataContext.EditAgentProductsCommand}"
+                                                   CommandParameter="{Binding Id}"
+                                                   Background="Transparent"
+                                                   Foreground="#9CA3AF"
+                                                   BorderThickness="0"
+                                                   Padding="8"
+                                                   CornerRadius="6">
+                                                <TextBlock Text="️" FontSize="16"/>
+                                                <Button.Styles>
+                                                    <Style Selector="Button:pointerover">
+                                                        <Setter Property="Background" Value="#EFF6FF"/>
+                                                        <Setter Property="Foreground" Value="#3B82F6"/>
+                                                    </Style>
+                                                </Button.Styles>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

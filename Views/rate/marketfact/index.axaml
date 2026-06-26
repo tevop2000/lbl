@@ -1,0 +1,381 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AgentManagement.Avalonia.ViewModels.rate.marketfact"
+             xmlns:controls="using:AgentManagement.Avalonia.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="AgentManagement.Avalonia.Views.rate.marketfact.index"
+             x:DataType="vm:indexViewModel"
+             PointerPressed="OnUserControlPointerPressed">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Background="#F7F9FB">       
+      <!-- 顶部筛选区域 -->
+      <Border Background="#F7F9FB" Margin="0" Padding="24,16">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <!-- 左侧：DeptManagerAgentSelector -->
+            <ColumnDefinition Width="Auto"/>
+            <!-- 间距 -->
+            <ColumnDefinition Width="24"/>
+            <!-- 右侧：Excel 导入按钮 -->
+            <ColumnDefinition Width="Auto"/>
+            <!-- 剩余空间 -->
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <controls:DeptManagerAgentSelector x:Name="SelectorControl" Grid.Column="0"/>
+          
+          <!-- Excel导入按钮和模板下载 -->
+          <StackPanel Grid.Column="2" VerticalAlignment="Center" Orientation="Horizontal" Spacing="12">
+            <StackPanel>
+              <TextBlock Text="数据导入" FontSize="11" Foreground="#6B7280" Margin="0,0,0,8"/>
+              <Button x:Name="ExcelImportButton"
+                      Click="ExcelImportButton_Click"
+                      Background="#ECFDF5"
+                      Foreground="#059669"
+                      BorderBrush="#A7F3D0"
+                      BorderThickness="1"
+                      Padding="8,0"
+                      CornerRadius="6"
+                      Height="32">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <TextBlock Text="📊" FontSize="14" VerticalAlignment="Center"/>
+                  <TextBlock Text="Excel导入" FontSize="{StaticResource DefaultFontSize}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+            <StackPanel>
+              <TextBlock Text="模板下载" FontSize="11" Foreground="#6B7280" Margin="0,0,0,8"/>
+              <Button x:Name="TemplateDownloadButton"
+                      Click="TemplateDownloadButton_Click"
+                      Background="#EFF6FF"
+                      Foreground="#3B82F6"
+                      BorderBrush="#BFDBFE"
+                      BorderThickness="1"
+                      Padding="8,0"
+                      CornerRadius="6"
+                      Height="32">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <TextBlock Text="📥" FontSize="14" VerticalAlignment="Center"/>
+                  <TextBlock Text="模板下载" FontSize="{StaticResource DefaultFontSize}" VerticalAlignment="Center"/>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+      </Border>
+      
+      <!-- 顶部分割线 -->
+      <Border Height="1" Background="#E2E8F0" Margin="0"/>
+
+      <!-- 顶部标题和操作 -->
+      <Grid Margin="24,24,24,0">
+        <Grid ColumnDefinitions="Auto,*">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+            <TextBlock Text="🕒" FontSize="24" VerticalAlignment="Center"/>
+            <TextBlock Text="市占率模块" FontWeight="Bold" FontSize="28" Foreground="#1A2533" VerticalAlignment="Center"/>
+          </StackPanel>
+
+          <Button Grid.Column="1"			
+                  Command="{Binding ClearAgentResourcesCommand}"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  HorizontalAlignment="Right"
+                  HorizontalContentAlignment="Right"
+                  Cursor="Hand">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+              <TextBlock Text="⟳" FontSize="20" Foreground="#94A3B8" VerticalAlignment="Center"/>
+              <TextBlock Text="清空本代理商年度数据" FontSize="18" Foreground="#94A3B8" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+        </Grid>
+      </Grid>
+
+      <!-- 代理商和年度信息 -->
+      <StackPanel Orientation="Horizontal" Margin="32,12,0,0" Spacing="16">
+        <TextBlock Text="当前代理商：" FontSize="20" Foreground="#64748B"/>
+        <TextBlock Text="{Binding CurrentAgentName}" FontSize="20" Foreground="#1A2533"/>
+        <TextBlock Text="·" FontSize="20" Foreground="#64748B"/>
+        <TextBlock Text="{Binding CurrentYear, Mode=OneWay, StringFormat='年度 {0}'}" FontSize="20" Foreground="#1A2533"/>
+      </StackPanel>
+
+      <!-- 统计卡片 -->
+      <Grid Margin="16,24,16,0" ColumnDefinitions="*,*,*,*,*,*,*,*" >
+            <!-- 卡片1 -->
+            <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0" >
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="◎" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="市场总容量" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding TotalMarketCapacityText}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" IsReadOnly="True" IsTabStop="False"/>
+                    <TextBlock Text="只 / 月" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+            <!-- 卡片2 -->
+            <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="👤" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="CW 专人" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding CwEmployeesText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnCwEmployeesLostFocus"/>
+                    <TextBlock Text="人" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+            <!-- 卡片3 -->
+            <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="🚚" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="CW 专车" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding CwVehiclesText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnCwVehiclesLostFocus"/>
+                    <TextBlock Text="辆" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+            <!-- 卡片4 -->
+            <Border Grid.Column="3" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="💳" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="CW专用资金" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding CwSpecialFundText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnCwSpecialFundLostFocus"/>
+                    <TextBlock Text="万元" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+            <!-- 卡片5 -->
+            <Border Grid.Column="4" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="👤" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="TN 专人" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding TnEmployeesText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnTnEmployeesLostFocus"/>
+                    <TextBlock Text="人" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+            <!-- 卡片6 -->
+            <Border Grid.Column="5" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+                        <TextBlock Text="🚚" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+                        <TextBlock Text="TN 专车" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1"/>
+                    </Grid>
+                    <TextBox Text="{Binding TnVehiclesText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnTnVehiclesLostFocus"/>
+                    <TextBlock Text="辆" FontSize="16" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Border>
+			<!-- 卡片7 -->
+			<Border Grid.Column="6" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+				<StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+					<TextBlock Text="💳" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+					<TextBlock Text="TN专用资金" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1" Grid.Row="0"/>
+				</Grid>
+				<TextBox Text="{Binding TnSpecialFundText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnTnSpecialFundLostFocus"/>
+				<TextBlock Text="万元" FontSize="16" Foreground="#94A3B8"/>
+				</StackPanel>
+			</Border>
+		  <!-- 卡片8 -->
+		  <Border Grid.Column="7" Background="White" CornerRadius="12" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,0,0">
+			  <StackPanel>
+				  <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="*" VerticalAlignment="Center" Height="30">
+					  <TextBlock Text="�" FontSize="20" Foreground="#64748B" VerticalAlignment="Center" Grid.Column="0"/>
+					  <TextBlock Text="聚道覆盖率" FontSize="16" Foreground="#64748B" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="1" Grid.Row="0"/>
+				  </Grid>
+				  <TextBox Text="{Binding ChannelCoverageText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" FontSize="20" FontWeight="Bold" Foreground="#1A2533" Margin="0,16,0,0" HorizontalContentAlignment="Left" BorderThickness="0" Background="Transparent" LostFocus="OnChannelCoverageLostFocus"/>
+				  <TextBlock Text="%" FontSize="16" Foreground="#94A3B8"/>
+			  </StackPanel>
+		  </Border>
+        </Grid>
+
+      <!-- 图表区域 -->
+      <Grid Margin="16,24,16,0" ColumnDefinitions="*,*,*,*">
+            <!-- 图表1：专人分布 -->
+            <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center" Height="36">
+                        <TextBlock Text="专人分布 (CW vs TN)" FontSize="14" Foreground="#64748B" VerticalAlignment="Center"/>
+                        <!--<TextBlock Text="人" FontSize="14" Foreground="#94A3B8" HorizontalAlignment="Right"/>-->
+                    </Grid>
+                    <Canvas Width="160" Height="160" Margin="20,20,20,16">
+                        <Path Data="M80,80 L80,0 A80,80 0 0,1 80,160 A80,80 0 0,1 80,0 Z" Fill="#F59E0B"/>
+                        <Path Data="{Binding EmployeeCwPathData}" Fill="#3B82F6"/>
+                        <Ellipse Width="96" Height="96" Fill="White" Margin="32,32"/>
+                    </Canvas>
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="4">
+                            <Ellipse Width="12" Height="12" Fill="#3B82F6"/>
+                            <TextBlock Text="CW" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding EmployeeCwRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="4" Margin="16,0,0,0">
+                            <Ellipse Width="12" Height="12" Fill="#F59E0B"/>
+                            <TextBlock Text="TN" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding EmployeeTnRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding EmployeeTotal, StringFormat='合计 {0} 人'}" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 图表2：专车分布 -->
+            <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center" Height="36">
+                        <TextBlock Text="专车分布 (CW vs TN)" FontSize="14" Foreground="#64748B" VerticalAlignment="Center"/>
+						<!--<TextBlock Text="辆" FontSize="14" Foreground="#94A3B8" HorizontalAlignment="Right"/>-->
+                    </Grid>
+                    <Canvas Width="160" Height="160" Margin="20,20,20,16">
+                        <Path Data="M80,80 L80,0 A80,80 0 0,1 80,160 A80,80 0 0,1 80,0 Z" Fill="#F59E0B"/>
+                        <Path Data="{Binding VehicleCwPathData}" Fill="#3B82F6"/>
+                        <Ellipse Width="96" Height="96" Fill="White" Margin="32,32"/>
+                    </Canvas>
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="4">
+                            <Ellipse Width="12" Height="12" Fill="#3B82F6"/>
+                            <TextBlock Text="CW" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding VehicleCwRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="4" Margin="16,0,0,0">
+                            <Ellipse Width="12" Height="12" Fill="#F59E0B"/>
+                            <TextBlock Text="TN" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding VehicleTnRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding VehicleTotal, StringFormat='合计 {0} 辆'}" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 图表3：专用资金分布 -->
+            <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1" Margin="0,0,8,0">
+                <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center" Height="36">
+                        <TextBlock Text="专用资金分布 (CW vs TN)" FontSize="14" Foreground="#64748B" VerticalAlignment="Center"/>
+						<!--<TextBlock Text="万元" FontSize="14" Foreground="#94A3B8" HorizontalAlignment="Right"/>-->
+                    </Grid>
+                    <Canvas Width="160" Height="160" Margin="20,20,20,16">
+                        <Path Data="M80,80 L80,0 A80,80 0 0,1 80,160 A80,80 0 0,1 80,0 Z" Fill="#F59E0B"/>
+                        <Path Data="{Binding FundCwPathData}" Fill="#3B82F6"/>
+                        <Ellipse Width="96" Height="96" Fill="White" Margin="32,32"/>
+                    </Canvas>
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="4">
+                            <Ellipse Width="12" Height="12" Fill="#3B82F6"/>
+                            <TextBlock Text="CW" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding FundCwRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="4" Margin="16,0,0,0">
+                            <Ellipse Width="12" Height="12" Fill="#F59E0B"/>
+                            <TextBlock Text="TN" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                            <TextBlock Text="{Binding FundTnRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding FundTotal, StringFormat='合计 {0} 万元'}" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 图表4：总市占率 -->
+            <Border Grid.Column="3" Background="White" CornerRadius="12" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+                <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center" Height="36">
+                        <TextBlock Text="总市占率" FontSize="14" Foreground="#64748B" VerticalAlignment="Center"/>
+                        <TextBlock Text="%" FontSize="14" Foreground="#94A3B8" HorizontalAlignment="Right"/>
+                    </Grid>
+                    <Canvas Width="160" Height="160" Margin="20,20,20,16">
+                        <Ellipse Width="160" Height="160" Fill="Transparent" Stroke="#E2E8F0" StrokeThickness="24"/>
+                        <Path Data="{Binding MarketSharePathData}" Fill="#10B981"/>
+                        <Path Data="M80,80 L160,80 A80,80 0 0,1 80,160 Z" Fill="#E2E8F0"/>
+                        <Ellipse Width="96" Height="96" Fill="White" Margin="32,32"/>
+                        <TextBlock Text="{Binding TotalMarketShareText}" FontSize="24" FontWeight="Bold" Foreground="#1A2533" Canvas.Left="60" Canvas.Top="56"/>
+                    </Canvas>
+                    <Grid ColumnDefinitions="Auto,Auto,Auto" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="4">
+                            <Ellipse Width="12" Height="12" Fill="#10B981"/>
+                            <TextBlock Text="CW销量" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="4" Margin="16,0,0,0">
+                            <Ellipse Width="12" Height="12" Fill="#E2E8F0"/>
+                            <TextBlock Text="市场总容量" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding TotalMarketShareText, StringFormat='市场份额 {0}'}" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+      <!-- 各系列品牌销量对比表格 -->
+      <Border Margin="16,24,16,32" Background="White" CornerRadius="12" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel>
+                <Grid Margin="24,20,24,0">
+                    <TextBlock Text="各系列品牌销量对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                    <TextBlock Grid.Column="1" Text="{Binding SalesComparisonItems.Count, StringFormat='共 {0} 条记录'}" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" HorizontalAlignment="Right"/>
+                </Grid>
+                <TextBlock Text="编辑 CW 销量 / TN 销量 / 小品牌销量，市场总容量，占比与差值自动计算" FontSize="{StaticResource DefaultFontSize}" Foreground="#94A3B8" Margin="24,4,24,16"/>
+                
+                <Border Background="#F8FAFC" BorderThickness="1" BorderBrush="#E2E8F0" Margin="16,0,16,16">
+                    <StackPanel Margin="8">
+                        <!-- 表头 -->
+                        <Grid ColumnDefinitions="2*,1*,1*,1*,1*,1*,1*,1*,1*,1*,1*" Background="#F8FAFC">
+                            <TextBlock Grid.Column="0" Text="系列" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="1" Text="市场总容量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="2" Text="CW销量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="3" Text="CW占比" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="4" Text="TN销量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="5" Text="TN占比" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="6" Text="小品牌销量" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="7" Text="小品牌占比" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="8" Text="CW-TN" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="9" Text="TN-小" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                            <TextBlock Grid.Column="10" Text="CW-小" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="8,6"/>
+                        </Grid>
+                        
+                        <!-- 数据行 -->
+                        <ItemsControl ItemsSource="{Binding SalesComparisonItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:SalesComparisonItem">
+                                    <Border BorderThickness="0,0,0,1" BorderBrush="#E2E8F0">
+                                        <Grid ColumnDefinitions="2*,1*,1*,1*,1*,1*,1*,1*,1*,1*,1*">
+                                            <TextBlock Grid.Column="0" Text="{Binding SeriesName}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" Padding="8,6"/>
+											<TextBlock Grid.Column="1" Text="{Binding MarketTotal}" FontSize="{StaticResource DefaultFontSize}" Foreground="#1A2533" Padding="8,6" />
+                                            <TextBox Grid.Column="2" Text="{Binding CwSales}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" BorderThickness="0" LostFocus="OnSalesLostFocus" Tag="CwSales"/>
+                                            <TextBlock Grid.Column="3" Text="{Binding CwRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                            <TextBox Grid.Column="4" Text="{Binding TnSales}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" BorderThickness="0" LostFocus="OnSalesLostFocus" Tag="TnSales"/>
+                                            <TextBlock Grid.Column="5" Text="{Binding TnRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                            <TextBox Grid.Column="6" Text="{Binding SmallBrandSales}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" BorderThickness="0" LostFocus="OnSalesLostFocus" Tag="SmallBrandSales"/>
+                                            <TextBlock Grid.Column="7" Text="{Binding SmallBrandRatio}" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                            <TextBlock Grid.Column="8" Text="{Binding CwMinusTn}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" Foreground="{Binding CwMinusTnColor}"/>
+                                            <TextBlock Grid.Column="9" Text="{Binding TnMinusSmallBrand}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" Foreground="{Binding TnMinusSmallBrandColor}"/>
+                                            <TextBlock Grid.Column="10" Text="{Binding CwMinusSmallBrand}" FontSize="{StaticResource DefaultFontSize}" Padding="8,6" Foreground="{Binding CwMinusSmallBrandColor}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        
+                        <!-- 合计行 -->
+                        <Border BorderThickness="1,0,0,0" BorderBrush="#1A2533" Background="#F8FAFC">
+                            <Grid ColumnDefinitions="2*,1*,1*,1*,1*,1*,1*,1*,1*,1*,1*">
+                                <TextBlock Grid.Column="0" Text="合计" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                <TextBlock Grid.Column="1" Text="{Binding TotalMarketTotal}" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                <TextBlock Grid.Column="2" Text="{Binding TotalCwSales}" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                <TextBlock Grid.Column="3" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                <TextBlock Grid.Column="4" Text="{Binding TotalTnSales}" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                <TextBlock Grid.Column="5" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                <TextBlock Grid.Column="6" Text="{Binding TotalSmallBrandSales}" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                <TextBlock Grid.Column="7" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                <TextBlock Grid.Column="8" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                <TextBlock Grid.Column="9" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                                <TextBlock Grid.Column="10" Text="--" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Padding="8,6"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
+

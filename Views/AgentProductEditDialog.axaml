@@ -1,0 +1,168 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+        x:Class="AgentManagement.Avalonia.Views.AgentProductEditDialog"
+        x:DataType="vm:AgentProductEditViewModel"
+        Title="{Binding WindowTitle}"
+        Width="750" Height="600"
+        WindowStartupLocation="CenterScreen">
+    
+    <Design.DataContext>
+        <vm:AgentProductEditViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- 标题栏 -->
+        <Border Grid.Row="0" 
+               Background="White"
+               Padding="20,15,20,10"
+               x:DataType="vm:AgentProductEditViewModel">
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding WindowTitle}"
+                          FontSize="18"
+                          FontWeight="Bold"
+                          Foreground="#111827"/>
+                
+                <TextBlock Text="⚠ 编辑模板会影响所有未自定义月份的默认配置"
+                          FontSize="{StaticResource DefaultFontSize}"
+                          Foreground="#D97706"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 内容区域 -->
+        <ScrollViewer Grid.Row="1" 
+                     VerticalScrollBarVisibility="Auto"
+                     Padding="20"
+                     x:DataType="vm:AgentProductEditViewModel">
+            <StackPanel Spacing="15">
+                <!-- 添加产品按钮 -->
+                <Button Content="➕ 添加产品"
+                       Command="{Binding AddProductCommand}"
+                       HorizontalAlignment="Right"
+                       Background="#2563EB"
+                       Foreground="White"
+                       Padding="15,8"
+                       CornerRadius="4"
+                       FontWeight="Bold"/>
+
+                <!-- 提示信息 -->
+                <TextBlock Text="占比 = 销售结构占比（12个月内该型号销量占总销量的百分比） · 组价 = 整组售价（元） · 进价 = 整组采购价（元）"
+                          FontSize="{StaticResource DefaultFontSize}"
+                          Foreground="#6B7280"
+                          TextWrapping="Wrap"/>
+
+                <!-- 占比总和提示 -->
+                <Border Background="{Binding ProportionSumBackground}"
+                       Padding="10,6"
+                       CornerRadius="4"
+                       BorderBrush="{Binding ProportionSumBorder}"
+                       BorderThickness="1">
+                    <TextBlock Text="{Binding ProportionSumText}"
+                              FontSize="{StaticResource DefaultFontSize}"
+                              FontWeight="Bold"
+                              Foreground="{Binding ProportionSumForeground}"/>
+                </Border>
+
+                <!-- 产品表格 -->
+                <Border Background="White"
+                       Padding="10"
+                       CornerRadius="4"
+                       BorderBrush="#E5E7EB"
+                       BorderThickness="1">
+                    <StackPanel>
+                        <!-- 表头 -->
+                        <Border Background="#F9FAFB" Margin="5,0,5,8" Padding="0,8">
+                            <Grid ColumnDefinitions="150,80,80,80,80,*">
+                                <TextBlock Grid.Column="0" Text="产品型号" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}"/>
+                                <TextBlock Grid.Column="1" Text="占比(%)" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                                <TextBlock Grid.Column="2" Text="组价(元)" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                                <TextBlock Grid.Column="3" Text="进价(元)" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                                <TextBlock Grid.Column="4" Text="提成(元)" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                                <TextBlock Grid.Column="5" Text="操作" FontWeight="Bold" Foreground="#374151" FontSize="{StaticResource DefaultFontSize}" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- 分隔线 -->
+                        <Rectangle Height="1" Fill="#E5E7EB" Margin="5,0,5,0"/>
+                        
+                        <!-- 数据列表 -->
+                        <ListBox ItemsSource="{Binding Products}" 
+                                Height="320"
+                                BorderThickness="0"
+                                Background="Transparent">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ProductItem">
+                                    <Border Padding="5,8">
+                                        <Grid ColumnDefinitions="150,80,80,80,80,*">
+                                            <TextBlock Grid.Column="0" Text="{Binding Model}" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding Proportion, StringFormat={}{0:F2}}" 
+                                                    HorizontalAlignment="Stretch" Margin="0,0,5,0" VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right" Padding="4,2" FontSize="{StaticResource DefaultFontSize}"/>
+                                            <TextBox Grid.Column="2" Text="{Binding GroupPrice, StringFormat={}{0:F2}}" 
+                                                    HorizontalAlignment="Stretch" Margin="0,0,5,0" VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right" Padding="4,2" FontSize="{StaticResource DefaultFontSize}"/>
+                                            <TextBox Grid.Column="3" Text="{Binding PurchasePrice, StringFormat={}{0:F2}}" 
+                                                    HorizontalAlignment="Stretch" Margin="0,0,5,0" VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right" Padding="4,2" FontSize="{StaticResource DefaultFontSize}"/>
+                                            <TextBox Grid.Column="4" Text="{Binding Commission, StringFormat={}{0:F2}}" 
+                                                    HorizontalAlignment="Stretch" Margin="0,0,5,0" VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right" Padding="4,2" FontSize="{StaticResource DefaultFontSize}"/>
+                                            <Button Grid.Column="5" Content="✕"
+                                                   Click="OnDeleteClick"
+                                                   Tag="{Binding}"
+                                                   Background="Transparent"
+                                                   Foreground="#DC2626"
+                                                   BorderThickness="0"
+                                                   Cursor="Hand"
+                                                   HorizontalAlignment="Center"
+                                                   Padding="5,2"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                                <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                                    <Setter Property="Background" Value="#F9FAFB"/>
+                                </Style>
+                            </ListBox.Styles>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部按钮 -->
+        <Border Grid.Row="2"
+               Background="White"
+               Padding="20,15"
+               BorderBrush="#E5E7EB"
+               BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right"
+                       Spacing="10"
+                       x:DataType="vm:AgentProductEditViewModel">
+                <Button Content="取消"
+                       Command="{Binding CancelCommand}"
+                       Background="White"
+                       Foreground="#374151"
+                       BorderBrush="#D1D5DB"
+                       BorderThickness="1"
+                       Padding="20,8"
+                       CornerRadius="4"/>
+                
+                <Button Content="💾 保存"
+                       Command="{Binding SaveCommand}"
+                       Background="#10B981"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Padding="20,8"
+                       CornerRadius="4"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
+

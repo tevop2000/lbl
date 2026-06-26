@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels"
+        x:Class="AgentManagement.Avalonia.Views.ImportOptionsDialog"
+        x:DataType="vm:ImportOptionsViewModel"
+        Title="导入选项"
+        Width="400" Height="250"
+        WindowStartupLocation="CenterScreen">
+    
+    <Design.DataContext>
+        <vm:ImportOptionsViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- 内容区域 -->
+        <StackPanel Grid.Row="0" Spacing="15" Margin="20">
+            <!-- 年份选择 -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="选择年份:" 
+                          FontSize="13"
+                          FontWeight="SemiBold"
+                          Foreground="#374151"/>
+                
+                <ComboBox ItemsSource="{Binding YearList}"
+                         SelectedItem="{Binding SelectedYear}"
+                         HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- 覆盖选项 -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="数据覆盖:" 
+                          FontSize="13"
+                          FontWeight="SemiBold"
+                          Foreground="#374151"/>
+                
+                <RadioButton Content="覆盖已有数据"
+                            IsChecked="{Binding IsOverwrite}"
+                            GroupName="OverwriteGroup"/>
+                
+                <RadioButton Content="跳过已有数据"
+                            IsChecked="{Binding IsSkip}"
+                            GroupName="OverwriteGroup"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 底部按钮 -->
+        <Border Grid.Row="1"
+               Background="#F9FAFB"
+               Padding="20,15"
+               BorderBrush="#E5E7EB"
+               BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" 
+                       HorizontalAlignment="Right"
+                       Spacing="10">
+                <Button Content="取消"
+                       Command="{Binding CancelCommand}"
+                       Background="White"
+                       Foreground="#374151"
+                       BorderBrush="#D1D5DB"
+                       BorderThickness="1"
+                       Padding="20,8"
+                       CornerRadius="4"/>
+                
+                <Button Content="💾 确定"
+                       Command="{Binding ConfirmCommand}"
+                       Background="#10B981"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Padding="20,8"
+                       CornerRadius="4"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

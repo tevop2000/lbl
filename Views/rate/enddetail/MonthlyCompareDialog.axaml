@@ -1,0 +1,456 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="AgentManagement.Avalonia.Views.rate.enddetail.MonthlyCompareDialog"
+        Title="月度分析/预测对比"
+        Width="1200"
+        Height="750"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Window.Styles>
+        <Style Selector="Button.closeButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Styles>
+    
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                        <TextBlock Text="{Binding AgentName}" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+            
+            <!-- 内容区域 -->
+            <Border Grid.Row="1" Padding="24,20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Spacing="24">
+                        <!-- 加载状态 -->
+                        <StackPanel IsVisible="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="300">
+                            <TextBlock Text="{Binding LoadingMessage}" FontSize="14" Foreground="#64748B"/>
+                        </StackPanel>
+                        
+                        <!-- 核心指标对比卡片 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="📊" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="核心指标对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Grid ColumnDefinitions="*,*,*">
+                                <!-- 销量对比 -->
+                                <Border Grid.Column="0" Background="#F8FAFC" CornerRadius="12" Padding="16" Margin="0,0,8,0">
+                                    <StackPanel>
+                                        <TextBlock Text="销量对比" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,8"/>
+                                        <Grid ColumnDefinitions="*,*,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="实际数据" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding AnalysisActualSales, StringFormat=\{0:N0\}}" FontSize="16" FontWeight="Bold" Foreground="#1A2533"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="16,0">
+                                                <TextBlock Text="预测数据" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding ForecastSales, StringFormat=\{0:N0\}}" FontSize="16" FontWeight="Bold" Foreground="#3B82F6"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="8" VerticalAlignment="Bottom">
+                                                <TextBlock Text="{Binding SalesDiffText}" FontSize="{StaticResource DefaultFontSize}" Foreground="{Binding SalesDiffColor}" FontWeight="Medium"/>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                                
+                                <!-- 达成率对比 -->
+                                <Border Grid.Column="1" Background="#F8FAFC" CornerRadius="12" Padding="16" Margin="0,0,8,0">
+                                    <StackPanel>
+                                        <TextBlock Text="达成率对比" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,8"/>
+                                        <Grid ColumnDefinitions="*,*,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="实际达成率" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding AnalysisAchievementRate, StringFormat=\{0:F2\}%}" FontSize="16" FontWeight="Bold" Foreground="#1A2533"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="16,0">
+                                                <TextBlock Text="盈亏平衡点达成率" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding ForecastAchievementRate, StringFormat=\{0:F2\}%}" FontSize="16" FontWeight="Bold" Foreground="#3B82F6"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="8" VerticalAlignment="Bottom">
+                                                <TextBlock Text="{Binding AchievementRateDiffText}" FontSize="{StaticResource DefaultFontSize}" Foreground="{Binding AchievementRateDiffColor}" FontWeight="Medium"/>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                                
+                                <!-- 净利润对比 -->
+                                <Border Grid.Column="2" Background="#F8FAFC" CornerRadius="12" Padding="16">
+                                    <StackPanel>
+                                        <TextBlock Text="净利润对比" FontSize="{StaticResource DefaultFontSize}" Foreground="#64748B" Margin="0,0,0,8"/>
+                                        <Grid ColumnDefinitions="*,*,Auto">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="实际数据" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding AnalysisNetProfit, StringFormat=\{0:N2\}}" FontSize="16" FontWeight="Bold" Foreground="#1A2533"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Margin="16,0">
+                                                <TextBlock Text="预测数据" FontSize="10" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding ForecastNetProfit, StringFormat=\{0:N2\}}" FontSize="16" FontWeight="Bold" Foreground="#3B82F6"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="2" Background="White" CornerRadius="8" Padding="8" VerticalAlignment="Bottom">
+                                                <TextBlock Text="{Binding NetProfitDiffText}" FontSize="{StaticResource DefaultFontSize}" Foreground="{Binding NetProfitDiffColor}" FontWeight="Medium"/>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                        
+                        <!-- 月度数据明细对比 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="📋" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="月度数据明细对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                <StackPanel>
+                                    <!-- 表头 -->
+                                    <Grid ColumnDefinitions="1*,1*,1*,1*,1*,1*,1*" Background="#F1F5F9">
+                                        <TextBlock Grid.Column="0" Text="月份" FontSize="11" FontWeight="Bold" Foreground="#64748B" Padding="12,8"/>
+										<!-- <TextBlock Grid.Column="1" Text="分析销量" FontSize="11" FontWeight="Bold" Foreground="#1A2533" Padding="12,8"/>-->
+										<TextBlock Grid.Column="1" Text="实际销量" FontSize="11" FontWeight="Bold" Foreground="#1A2533" Padding="12,8"/>
+                                        <TextBlock Grid.Column="2" Text="预测销量" FontSize="11" FontWeight="Bold" Foreground="#3B82F6" Padding="12,8"/>
+										
+										<TextBlock Grid.Column="3" Text="实际达成率" FontSize="11" FontWeight="Bold" Foreground="#1A2533" Padding="12,8"/>
+                                        <TextBlock Grid.Column="4" Text="盈亏平衡点达成率" FontSize="11" FontWeight="Bold" Foreground="#3B82F6" Padding="12,8"/>
+                                        <TextBlock Grid.Column="5" Text="实际净利润" FontSize="11" FontWeight="Bold" Foreground="#1A2533" Padding="12,8"/>
+                                        <TextBlock Grid.Column="6" Text="预测净利润" FontSize="11" FontWeight="Bold" Foreground="#3B82F6" Padding="12,8"/>
+										<!--<TextBlock Grid.Column="8" Text="销量差异" FontSize="11" FontWeight="Bold" Foreground="#7C3AED" Padding="12,8"/>
+                                        <TextBlock Grid.Column="9" Text="利润差异" FontSize="11" FontWeight="Bold" Foreground="#7C3AED" Padding="12,8"/>-->
+                                    </Grid>
+                                    
+                                    <!-- 数据行 -->
+                                    <ItemsControl ItemsSource="{Binding MonthlyDetailCompareList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="0,0,0,1" BorderBrush="#E2E8F0">
+                                                    <Grid ColumnDefinitions="1*,1*,1*,1*,1*,1*,1*">
+                                                        <TextBlock Grid.Column="0" Text="{Binding Month, StringFormat=\{0\}月}" FontSize="11" Foreground="#64748B" Padding="12,8"/>
+                                                        <!--<TextBlock Grid.Column="1" Text="{Binding AnalysisTargetSales, StringFormat=\{0:N0\}}" FontSize="11" Foreground="#1A2533" Padding="12,8"/>-->
+														<TextBlock Grid.Column="1" Text="{Binding AnalysisActualSales, StringFormat=\{0:N0\}}" FontSize="11" Foreground="#1A2533" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding ForecastTargetSales, StringFormat=\{0:N0\}}" FontSize="11" Foreground="#3B82F6" Padding="12,8"/>
+														<TextBlock Grid.Column="3" Text="{Binding AnalysisAchievementRate, StringFormat=\{0:F2\}%}" FontSize="11" Foreground="#059669" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="4" Text="{Binding ForecastAchievementRate, StringFormat=\{0:F2\}%}" FontSize="11" Foreground="#059669" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="5" Text="{Binding AnalysisNetProfit, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#1A2533" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="6" Text="{Binding ForecastNetProfit, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#3B82F6" Padding="12,8"/>
+														<!--<TextBlock Grid.Column="8" Text="{Binding SalesDiff, StringFormat=\{0:N0\}}" FontSize="11" Foreground="{Binding SalesDiffColor}" Padding="12,8"/>
+                                                        <TextBlock Grid.Column="9" Text="{Binding ProfitDiff, StringFormat=\{0:N2\}}" FontSize="11" Foreground="{Binding ProfitDiffColor}" Padding="12,8"/>-->
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        
+                        <!-- 固定成本对比 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="💰" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="固定成本对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Border Background="#F8FAFC" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <!-- 表头 -->
+                                    <Grid ColumnDefinitions="2*,1*,1*,1*" Margin="0,0,0,8">
+                                        <TextBlock Grid.Column="0" Text="成本项目" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="0,4"/>
+                                        <TextBlock Grid.Column="1" Text="实际数据(元)" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="0,4" TextAlignment="Right"/>
+                                        <TextBlock Grid.Column="2" Text="预测数据(元)" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#3B82F6" Padding="0,4" TextAlignment="Right"/>
+                                        <TextBlock Grid.Column="3" Text="差异" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#7C3AED" Padding="0,4" TextAlignment="Right"/>
+                                    </Grid>
+                                    
+                                    <!-- 数据行 -->
+                                    <ItemsControl ItemsSource="{Binding FixedCostCompareList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="2*,1*,1*,1*" Margin="0,3,0,3">
+                                                    <TextBlock Grid.Column="0" Text="{Binding ExpenseType}" FontSize="11" Foreground="#64748B" Padding="0,4"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding AnalysisAmount, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#1A2533" Padding="0,4" TextAlignment="Right"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding ForecastAmount, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#3B82F6" Padding="0,4" TextAlignment="Right"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding DiffText}" FontSize="11" Foreground="{Binding DiffColor}" Padding="0,4" TextAlignment="Right"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        
+                        <!-- 收益项目对比 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="💵" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="收益项目对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Border Background="#F8FAFC" CornerRadius="8" Padding="16">
+                                <StackPanel>
+                                    <!-- 表头 -->
+                                    <Grid ColumnDefinitions="2*,1*,1*,1*" Margin="0,0,0,8">
+                                        <TextBlock Grid.Column="0" Text="收益项目" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#64748B" Padding="0,4"/>
+                                        <TextBlock Grid.Column="1" Text="实际数据(元)" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#1A2533" Padding="0,4" TextAlignment="Right"/>
+                                        <TextBlock Grid.Column="2" Text="预测数据(元)" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#3B82F6" Padding="0,4" TextAlignment="Right"/>
+                                        <TextBlock Grid.Column="3" Text="差异" FontSize="{StaticResource DefaultFontSize}" FontWeight="Bold" Foreground="#7C3AED" Padding="0,4" TextAlignment="Right"/>
+                                    </Grid>
+                                    
+                                    <!-- 数据行 -->
+                                    <ItemsControl ItemsSource="{Binding IncomeItemCompareList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="2*,1*,1*,1*" Margin="0,3,0,3">
+                                                    <TextBlock Grid.Column="0" Text="{Binding ExpenseType}" FontSize="11" Foreground="#64748B" Padding="0,4"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding AnalysisAmount, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#059669" Padding="0,4" TextAlignment="Right"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding ForecastAmount, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#059669" Padding="0,4" TextAlignment="Right"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding DiffText}" FontSize="11" Foreground="{Binding DiffColor}" Padding="0,4" TextAlignment="Right"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        
+                        <!-- 产品配置对比 -->
+                        <StackPanel IsVisible="{Binding !IsLoading}">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+                                <TextBlock Text="📦" FontSize="16" Foreground="#64748B"/>
+                                <TextBlock Text="产品配置对比" FontWeight="Bold" FontSize="16" Foreground="#1A2533"/>
+                            </StackPanel>
+                            
+                            <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                <StackPanel>
+                                    <!-- 表头（带筛选功能） -->
+                                    <Grid ColumnDefinitions="1*,1*,1*,1*,1*,1*,1*,1*,1*" Background="#F1F5F9">
+                                        
+                                        <!-- 系列名称表头（可筛选） -->
+                                        <Border Grid.Column="0" Padding="8,6" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Grid.Column="0" Text="系列名称" FontSize="10" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                                                <Button Grid.Column="1" Background="Transparent" Padding="2" BorderThickness="0">
+                                                    <TextBlock Text="🔍" FontSize="10" Foreground="#64748B"/>
+                                                    <Button.Flyout>
+                                                        <Flyout Placement="BottomEdgeAlignedLeft"
+                                                                Opened="SeriesNameFlyout_Opened"
+                                                                Closed="SeriesNameFlyout_Closed">
+                                                            <StackPanel Width="180" Spacing="8">
+                                                                <TextBlock Text="筛选系列名称" FontSize="11" FontWeight="Bold" Foreground="#1A2533"/>
+                                                                <ComboBox x:Name="SeriesNameComboBox"
+                                                                          ItemsSource="{Binding SeriesNameOptions}"
+                                                                          SelectionChanged="SeriesNameComboBox_SelectionChanged"
+                                                                          FontSize="11"
+                                                                          Padding="8,4"
+                                                                          Background="White"
+                                                                          BorderBrush="#E2E8F0"
+                                                                          HorizontalAlignment="Stretch"/>
+                                                                <Button Content="清除筛选"
+                                                                        Click="ClearSeriesNameFilter_Click"
+                                                                        FontSize="10"
+                                                                        Background="#FEE2E2"
+                                                                        Foreground="#DC2626"
+                                                                        HorizontalAlignment="Stretch"
+                                                                        HorizontalContentAlignment="Center"
+                                                                        CornerRadius="4"
+                                                                        Padding="8,4"
+                                                                        IsVisible="{Binding HasSelectedSeriesName}"/>
+                                                            </StackPanel>
+                                                        </Flyout>
+                                                    </Button.Flyout>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                        <!-- 产品系列表头（可筛选） -->
+                                        <Border Grid.Column="1" Padding="8,6" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Grid.Column="0" Text="产品系列" FontSize="10" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                                                <Button Grid.Column="1" Background="Transparent" Padding="2" BorderThickness="0">
+                                                    <TextBlock Text="🔍" FontSize="10" Foreground="#64748B"/>
+                                                    <Button.Flyout>
+                                                        <Flyout Placement="BottomEdgeAlignedLeft"
+                                                                Opened="ItemNameFlyout_Opened"
+                                                                Closed="ItemNameFlyout_Closed">
+                                                            <StackPanel Width="180" Spacing="8">
+                                                                <TextBlock Text="筛选产品系列" FontSize="11" FontWeight="Bold" Foreground="#1A2533"/>
+                                                                <ComboBox x:Name="ItemNameComboBox"
+                                                                          ItemsSource="{Binding ItemNameOptions}"
+                                                                          SelectionChanged="ItemNameComboBox_SelectionChanged"
+                                                                          FontSize="11"
+                                                                          Padding="8,4"
+                                                                          Background="White"
+                                                                          BorderBrush="#E2E8F0"
+                                                                          HorizontalAlignment="Stretch"/>
+                                                                <Button Content="清除筛选"
+                                                                        Click="ClearItemNameFilter_Click"
+                                                                        FontSize="10"
+                                                                        Background="#FEE2E2"
+                                                                        Foreground="#DC2626"
+                                                                        HorizontalAlignment="Stretch"
+                                                                        HorizontalContentAlignment="Center"
+                                                                        CornerRadius="4"
+                                                                        Padding="8,4"
+                                                                        IsVisible="{Binding HasSelectedItemName}"/>
+                                                            </StackPanel>
+                                                        </Flyout>
+                                                    </Button.Flyout>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+										<!-- 产品型号表头（可筛选） -->
+										<Border Grid.Column="2" Padding="8,6" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+											<Grid ColumnDefinitions="*,Auto">
+												<TextBlock Grid.Column="0" Text="产品型号" FontSize="10" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+												<Button Grid.Column="1" Background="Transparent" Padding="2" BorderThickness="0">
+													<TextBlock Text="🔍" FontSize="10" Foreground="#64748B"/>
+													<Button.Flyout>
+														<Flyout Placement="BottomEdgeAlignedLeft"
+                                                                Opened="ProductModelFlyout_Opened"
+                                                                Closed="ProductModelFlyout_Closed">
+															<StackPanel Width="180" Spacing="8">
+																<TextBlock Text="筛选产品型号" FontSize="11" FontWeight="Bold" Foreground="#1A2533"/>
+																<ComboBox x:Name="ProductModelComboBox"
+                                                                          ItemsSource="{Binding ProductModelOptions}"
+                                                                          SelectionChanged="ProductModelComboBox_SelectionChanged"
+                                                                          FontSize="11"
+                                                                          Padding="8,4"
+                                                                          Background="White"
+                                                                          BorderBrush="#E2E8F0"
+                                                                          HorizontalAlignment="Stretch"/>
+																<Button Content="清除筛选"
+                                                                        Click="ClearProductModelFilter_Click"
+                                                                        FontSize="10"
+                                                                        Background="#FEE2E2"
+                                                                        Foreground="#DC2626"
+                                                                        HorizontalAlignment="Stretch"
+                                                                        HorizontalContentAlignment="Center"
+                                                                        CornerRadius="4"
+                                                                        Padding="8,4"
+                                                                        IsVisible="{Binding HasSelectedProductModel}"/>
+															</StackPanel>
+														</Flyout>
+													</Button.Flyout>
+												</Button>
+											</Grid>
+										</Border>
+                                        <TextBlock Grid.Column="3" Text="实际占比" FontSize="10" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                        <TextBlock Grid.Column="4" Text="预测占比" FontSize="10" FontWeight="Bold" Foreground="#3B82F6" Padding="8,6"/>
+                                        <TextBlock Grid.Column="5" Text="实际售价" FontSize="10" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                        <TextBlock Grid.Column="6" Text="预测售价" FontSize="10" FontWeight="Bold" Foreground="#3B82F6" Padding="8,6"/>
+                                        <TextBlock Grid.Column="7" Text="实际进价" FontSize="10" FontWeight="Bold" Foreground="#1A2533" Padding="8,6"/>
+                                        <TextBlock Grid.Column="8" Text="预测进价" FontSize="10" FontWeight="Bold" Foreground="#3B82F6" Padding="8,6"/>
+                                    </Grid>
+
+                                    <!-- 筛选状态提示条 -->
+                                    <Border x:Name="FilterStatusBar" Background="#EFF6FF" Padding="8,4" IsVisible="{Binding HasAnyFilter}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="当前筛选：" FontSize="10" Foreground="#64748B" VerticalAlignment="Center"/>
+                                            <Border Background="#DBEAFE" CornerRadius="4" Padding="6,2" IsVisible="{Binding HasSelectedProductModel}">
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock x:Name="ProductModelFilterText" FontSize="10" Foreground="#1E40AF"/>
+                                                    <Button Click="ClearProductModelFilter_Click"
+                                                            Background="Transparent"
+                                                            Padding="2"
+                                                            BorderThickness="0">
+                                                        <TextBlock Text="✕" FontSize="10" Foreground="#1E40AF"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background="#DBEAFE" CornerRadius="4" Padding="6,2" IsVisible="{Binding HasSelectedSeriesName}">
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock x:Name="SeriesNameFilterText" FontSize="10" Foreground="#1E40AF"/>
+                                                    <Button Click="ClearSeriesNameFilter_Click"
+                                                            Background="Transparent"
+                                                            Padding="2"
+                                                            BorderThickness="0">
+                                                        <TextBlock Text="✕" FontSize="10" Foreground="#1E40AF"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background="#DBEAFE" CornerRadius="4" Padding="6,2" IsVisible="{Binding HasSelectedItemName}">
+                                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                                    <TextBlock x:Name="ItemNameFilterText" FontSize="10" Foreground="#1E40AF"/>
+                                                    <Button Click="ClearItemNameFilter_Click"
+                                                            Background="Transparent"
+                                                            Padding="2"
+                                                            BorderThickness="0">
+                                                        <TextBlock Text="✕" FontSize="10" Foreground="#1E40AF"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                            <Button Content="清除全部"
+                                                    Click="ClearAllFilters_Click"
+                                                    FontSize="10"
+                                                    Background="#FEE2E2"
+                                                    Foreground="#DC2626"
+                                                    CornerRadius="4"
+                                                    Padding="8,2"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- 数据行 -->
+                                    <ItemsControl ItemsSource="{Binding FilteredProductCompareList}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid ColumnDefinitions="1*,1*,1*,1*,1*,1*,1*,1*,1*" Margin="0,2">
+													<TextBlock Grid.Column="0" Text="{Binding SeriesName}" FontSize="11" Foreground="#64748B" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding ItemName}" FontSize="11" Foreground="#1A2533" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding ItemModel}" FontSize="11" Foreground="#64748B" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding AnalysisStructureRatio, StringFormat=\{0:F4\}}" FontSize="11" Foreground="#1A2533" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding ForecastStructureRatio, StringFormat=\{0:F4\}}" FontSize="11" Foreground="#3B82F6" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="5" Text="{Binding AnalysisRemiumPrice, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#D97706" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="6" Text="{Binding ForecastRemiumPrice, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#D97706" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="7" Text="{Binding AnalysisRemiumCost, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#059669" Padding="8,6"/>
+                                                    <TextBlock Grid.Column="8" Text="{Binding ForecastRemiumCost, StringFormat=\{0:N2\}}" FontSize="11" Foreground="#059669" Padding="8,6"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+            
+            <!-- 底部按钮区域 -->
+            <Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                    <Button Content="关 闭"
+                            Background="#3B82F6"
+                            Foreground="White"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Padding="24,10"
+                            CornerRadius="8"
+                            Width="100"
+                            Click="CloseButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

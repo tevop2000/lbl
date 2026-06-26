@@ -1,0 +1,5 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AgentManagement.Avalonia.Views.SystemManagementView">
+    <TextBlock Text="系统管理 - 待实现" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="#9CA3AF"/>
+</UserControl>

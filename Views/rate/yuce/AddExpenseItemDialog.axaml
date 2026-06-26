@@ -1,0 +1,102 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AgentManagement.Avalonia.ViewModels.rate.yuce"
+        xmlns:converters="using:AgentManagement.Avalonia.Converters"
+        x:Class="AgentManagement.Avalonia.Views.rate.yuce.AddExpenseItemDialog"
+        x:DataType="vm:AddExpenseItemDialogViewModel"
+        Title="添加收益项目"
+        Width="520"
+        Height="360"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None"
+        CanResize="False">
+    <Window.Resources>
+        <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
+    </Window.Resources>
+    <Border Margin="24" Background="White" CornerRadius="20" Padding="0"
+            BorderBrush="#CBD5E1" BorderThickness="2">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- 标题栏 -->
+            <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel>
+                        <TextBlock Text="添加收益项目" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                        <TextBlock Text="请填写项目信息" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="22"
+                            Padding="10"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
+            <!-- 内容区域 -->
+            <Border Grid.Row="1" Padding="24,20">
+                <StackPanel Spacing="16">
+                    <!-- 项目类型
+                    <Grid ColumnDefinitions="80,*">
+                        <TextBlock Text="项目类型" FontSize="14" FontWeight="Medium" Foreground="#374151" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="16">
+                            <RadioButton Content="收益项目" IsChecked="{Binding IsIncome, ConverterParameter=1, Converter={StaticResource IntToBoolConverter}}" FontSize="14" Foreground="#374151"/>
+                            <RadioButton Content="固定成本" IsChecked="{Binding IsIncome, ConverterParameter=0, Converter={StaticResource IntToBoolConverter}}" FontSize="14" Foreground="#374151"/>
+                        </StackPanel>
+                    </Grid> -->
+                    
+                    <!-- 项目名称 -->
+                    <Grid ColumnDefinitions="80,*">
+                        <TextBlock Text="项目名称" FontSize="14" FontWeight="Medium" Foreground="#374151" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Text="{Binding ExpenseType}"
+                                 FontSize="14"
+                                 Padding="12,8"
+                                 BorderBrush="#E2E8F0"
+                                 BorderThickness="1"
+                                 CornerRadius="8"/>
+                    </Grid>
+
+                    <!-- 项目费用 -->
+                    <Grid ColumnDefinitions="80,*">
+                        <TextBlock Text="项目费用" FontSize="14" FontWeight="Medium" Foreground="#374151" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Text="{Binding Amount, Mode=TwoWay}"
+                                 FontSize="14"
+                                 Padding="12,8"
+                                 BorderBrush="#E2E8F0"
+                                 BorderThickness="1"
+                                 CornerRadius="8"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 底部按钮区域 -->			
+			<Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+				<StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                    <Button Content="取 消"
+                            Background="Transparent"
+                            Foreground="#64748B"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Padding="24,10"
+                            CornerRadius="8"
+                            Width="100"
+                            BorderBrush="#E2E8F0"
+                            BorderThickness="1"
+                            Click="CancelButton_Click"/>
+					<Button x:Name="ConfirmButton"
+							Content="确 定"
+							Background="#3B82F6"
+							Foreground="White"
+							FontSize="14"
+							FontWeight="Medium"
+							Padding="24,10"
+							CornerRadius="8"
+							Width="100"
+							Command="{Binding ConfirmCommand}"/>
+				</StackPanel>
+			</Border>
+        </Grid>
+    </Border>
+</Window>

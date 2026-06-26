@@ -1,0 +1,143 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AgentManagement.Avalonia.Views.rate.enddetail.EndDetailImportDialog"
+        Title="Excel数据导入（分析板块）"
+        Width="700"
+        Height="600"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        SystemDecorations="None">
+    <Grid>
+        <Border Margin="24" Background="White" CornerRadius="20" Padding="0" 
+                BorderBrush="#CBD5E1" BorderThickness="2">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- 标题栏 -->
+                <Border Grid.Row="0" Background="#EFF6FF" CornerRadius="20,20,0,0" Padding="24,16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel>
+                            <TextBlock Text="📊 Excel数据导入" FontSize="18" FontWeight="Bold" Foreground="#1A2533"/>
+                            <!--<TextBlock Text="按模板解析，月度销售额/费用/净利直接取自表二真实聚合" FontSize="14" Foreground="#3B82F6" Margin="0,4,0,0"/>-->
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="✕" 
+                                Click="CloseButton_Click"
+                                Background="Transparent" 
+                                Foreground="#64748B" 
+                                FontSize="22" 
+                                Padding="5"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+                </Border>
+
+                <!-- 内容区域 -->
+                <ScrollViewer Grid.Row="1" Padding="24,16,24,0" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="16">
+                        <!-- 年份选择 -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="📅 选择年份" FontSize="14" FontWeight="SemiBold" Foreground="#374151"/>
+                            <ComboBox x:Name="YearComboBox"
+                                      HorizontalAlignment="Stretch"
+                                      Padding="12"
+                                      Height="48"
+                                      CornerRadius="8"
+                                      BorderBrush="#D1D5DB"
+                                      BorderThickness="1"
+                                      Background="White"/>
+                        </StackPanel>
+
+                        <!-- 文件上传区域 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E5E7EB" BorderThickness="2" CornerRadius="12" Padding="40" PointerPressed="UploadArea_Click">
+                            <StackPanel Spacing="12" HorizontalAlignment="Center">
+                                <TextBlock Text="📤" FontSize="48" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="SelectedFileNameText" Text="点击上传Excel文件" FontSize="16" FontWeight="Medium" Foreground="#374151" HorizontalAlignment="Center"/>
+                                <TextBlock Text="支持 .xlsx, .xls 格式文件，需包含&quot;基础信息表&quot;和&quot;产品结构数据表&quot;" FontSize="13" Foreground="#9CA3AF" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 导入说明 -->
+                        <Border Background="#EFF6FF" CornerRadius="12" Padding="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="导入说明" FontSize="14" FontWeight="SemiBold" Foreground="#1E40AF"/>
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="• 基础信息表：填写目标销量、实际销量、费用明细" FontSize="13" Foreground="#3B82F6"/>
+                                    <TextBlock Text="• 产品结构数据表：填写型号信息、进价、卖价、提成" FontSize="13" Foreground="#3B82F6"/>
+									<TextBlock Text="" FontSize="13" Foreground="#3B82F6"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 底部按钮区域 -->
+                <Border Grid.Row="2" Background="White" CornerRadius="0,0,20,20" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                        <Button Content="↩ 取消" 
+                                x:Name="CancelButton"
+                                Background="White"
+                                Foreground="#64748B"
+                                BorderBrush="#E2E8F0"
+                                BorderThickness="1"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                Padding="20,12"
+                                CornerRadius="12"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Width="180"
+                                Click="CancelButton_Click"/>
+                        <Button x:Name="ConfirmButton"
+                                Content="✓ 确认导入" 
+                                Background="#3B82F6"
+                                Foreground="White"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Padding="20,12"
+                                CornerRadius="12"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Width="180"
+                                Click="ConfirmButton_Click"
+                                IsEnabled="False"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- 加载状态遮罩层 -->
+        <Border x:Name="LoadingOverlay" 
+                Margin="24" 
+                Background="rgba(255, 255, 255, 0.9)" 
+                CornerRadius="20" 
+                Padding="0" 
+                IsVisible="False">
+            <Grid>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+                    <!-- 旋转加载图标 -->
+                    <Grid Width="64" Height="64">
+                        <Ellipse Stroke="#E5E7EB" StrokeThickness="6" Width="64" Height="64"/>
+                        <Ellipse x:Name="LoadingEllipse" Stroke="#3B82F6" StrokeThickness="6" Width="64" Height="64" StrokeDashArray="3,2">
+                            <Ellipse.RenderTransform>
+                                <RotateTransform Angle="0" CenterX="32" CenterY="32"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                    </Grid>
+                    
+                    <!-- 加载状态文本 -->
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <TextBlock x:Name="LoadingStatusText" 
+                                   Text="正在导入数据，请稍候..." 
+                                   FontSize="16" 
+                                   FontWeight="Medium" 
+                                   Foreground="#374151" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="LoadingHintText" 
+                                   Text="系统正在处理您的Excel文件" 
+                                   FontSize="13" 
+                                   Foreground="#9CA3AF" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

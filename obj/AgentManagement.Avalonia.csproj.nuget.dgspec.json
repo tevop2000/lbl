@@ -1,0 +1,180 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\work\\1-xk\\code\\lbl\\AgentManagement.Avalonia.csproj": {}
+  },
+  "projects": {
+    "D:\\work\\1-xk\\code\\lbl\\AgentManagement.Avalonia.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\work\\1-xk\\code\\lbl\\AgentManagement.Avalonia.csproj",
+        "projectName": "AgentManagement.Avalonia",
+        "projectPath": "D:\\work\\1-xk\\code\\lbl\\AgentManagement.Avalonia.csproj",
+        "packagesPath": "C:\\Users\\otinz\\.nuget\\packages\\",
+        "outputPath": "D:\\work\\1-xk\\code\\lbl\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\otinz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "framework": "net6.0",
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.300"
+      },
+      "frameworks": {
+        "net6.0": {
+          "framework": "net6.0",
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Avalonia": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "Avalonia.Controls.DataGrid": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "Avalonia.Desktop": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "Avalonia.Diagnostics": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "Avalonia.Themes.Fluent": {
+              "target": "Package",
+              "version": "[11.1.12, )"
+            },
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "LiveChartsCore.SkiaSharpView.Avalonia": {
+              "target": "Package",
+              "version": "[2.0.0-rc2, )"
+            },
+            "MessageBox.Avalonia": {
+              "target": "Package",
+              "version": "[3.1.2.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[6.0.35, )"
+            },
+            "NPOI": {
+              "target": "Package",
+              "version": "[2.6.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Data.SQLite": {
+              "target": "Package",
+              "version": "[1.0.117, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.osx-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.osx-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.36, 6.0.36]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[6.0.36, 6.0.36]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "osx-x64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
